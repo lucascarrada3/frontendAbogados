@@ -1,0 +1,92 @@
+.expedientes-table-container {
+    margin-top: 20px;
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .search-input {
+    padding: 8px;
+    width: 300px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .expedientes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+  }
+  
+  .expedientes-table thead {
+    background-color: #062B82;
+    color: white;
+  }
+  
+  .expedientes-table th,
+  .expedientes-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .expedientes-table tbody tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .expedientes-table td button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .expedientes-table td button:first-child {
+    background-color: #062B82;
+    color: white;
+  }
+  
+  .expedientes-table td button:last-child {
+    background-color: #198754;
+    color: white;
+  }
+  
+  .expedientes-table td button:hover {
+    opacity: 0.9;
+  }
+  
+  .pagination-container {
+  display: flex;
+  margin-left: 800px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background-color: #062B82;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination-button:hover {
+  background-color: #0056b3;
+}
+
+.pagination-text {
+  font-size: 16px;
+}
+
+.page-size-selector {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+}

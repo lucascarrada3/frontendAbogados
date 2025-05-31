@@ -1,0 +1,47 @@
+.expedientes-page {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f9;
+    min-height: 100vh;
+    padding-bottom: 2rem;
+  }
+  
+  .titulo-expediente {
+    text-align: center;
+    margin-top: 30px;
+    color: #062B82;
+  }
+  
+  .tabs-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 15px;
+  }
+  
+  .tab-button {
+    background-color: #dce4f3;
+    border: 1px solid #062B82;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #062B82;
+    transition: background-color 0.3s ease;
+  }
+  
+  .tab-button.active,
+  .tab-button:hover {
+    background-color: #062B82;
+    color: white;
+  }
+  
+  .tabla-container {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+  }
+  
