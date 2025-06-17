@@ -4,8 +4,10 @@ import logo from '../../assets/logonavbar.jpg';
 import usuario from '../../assets/usuario.png';
 import menu from '../../assets/menu.jpg';
 
-// ¡Agregamos íconos! (puede ser FontAwesome, lucide-react, o imágenes tuyas)
-import { FaTachometerAlt, FaFolderOpen, FaGavel, FaLandmark } from 'react-icons/fa';
+//iconos para los expedientes  FaGavel, FaLandmark cuando se necesiten
+
+
+import { FaTachometerAlt, FaFolderOpen } from 'react-icons/fa';
 
 interface NavbarProps {
     username: string;
@@ -25,14 +27,16 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 
     const handleMenuButtonClick = () => {
         setIsSidebarOpen(!isSidebarOpen);
-        if (isSidebarOpen) {
-            setIsExpedientesDropdownOpen(false);
-        }
+        // if (isSidebarOpen) {
+        //     setIsExpedientesDropdownOpen(false);
+        // }
     };
     
     const handleLogout = () => {
-        console.log("Cerrar sesión");
-        window.location.href = '/';
+    localStorage.removeItem('token');
+    localStorage.removeItem('ultimaActividad');
+    localStorage.removeItem('username');
+    window.location.href = '/';
     };
 
     useEffect(() => {
@@ -48,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
         };
     }, []);
 
-    const [isExpedientesDropdownOpen, setIsExpedientesDropdownOpen] = useState(false);
+    // const [isExpedientesDropdownOpen, setIsExpedientesDropdownOpen] = useState(false);
 
     return (
         <>
@@ -72,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
             </nav>
 
             {/* Sidebar del Menú */}
-            <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+            {/* <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <ul>
                     <li>
                     <FaTachometerAlt className="sidebar-icon" />
@@ -108,6 +112,32 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                     )}
                     </li>
                 </ul>
+                </div> */}
+
+                <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+                <ul>
+                    <li>
+                    <FaTachometerAlt className="sidebar-icon" />
+                    {isSidebarOpen && (
+                        <span
+                        className="dropdown-title"
+                        onClick={() => window.location.href = '/dashboard'}
+                        style={{ cursor: 'pointer' }}
+                        >
+                        Dashboard
+                        </span>
+                    )}
+                    </li>
+
+                    <li onClick={() => window.location.href = '/expedientes'}>
+                    <FaFolderOpen className="sidebar-icon" />
+                    {isSidebarOpen && (
+                        <span className="dropdown-title" style={{ cursor: 'pointer' }}>
+                        Expedientes
+                        </span>
+                    )}
+                    </li>
+                </ul>
                 </div>
 
             {/* Sombra de fondo */}
@@ -116,7 +146,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                     className="sidebar-overlay"
                     onClick={() => {
                     setIsSidebarOpen(false);
-                    setIsExpedientesDropdownOpen(false); // Cerramos también el dropdown
+                    // setIsExpedientesDropdownOpen(false); 
                     }}
                 />
             )}

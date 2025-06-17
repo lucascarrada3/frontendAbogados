@@ -5,15 +5,15 @@ import '../../css/nuevoExpediente.css';
 
 const NuevoExpedientePage: React.FC = () => {
   const [nuevoExpediente, setNuevoExpediente] = useState<Expediente>({
-    id: 0,
+    idExpediente: 0, 
     juzgado: '',
-    fecha: new Date().toISOString().split('T')[0], // ✅ esta línea
+    fecha: new Date().toISOString().split('T')[0], 
     numeroExpediente: '',
     caratula: '',
     proveido: '',
     observaciones: '',
-    estado: 'En Curso',
-    tipo: 'federales', // Added the missing "tipo" property
+    idEstado: 'En Curso',
+    idTipo: 1, 
   });  
 
   const [tipo, setTipo] = useState<'federales' | 'provinciales' | 'extrajudiciales'>('federales');
@@ -23,9 +23,19 @@ const NuevoExpedientePage: React.FC = () => {
   useEffect(() => {
     const fetchEstados = async () => {
       try {
-        const response = await fetch('http://localhost:3001/estado');
+         const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token no encontrado. Inicia sesión.');
+        }
+        const response = await fetch('http://localhost:3001/estado', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
         const data = await response.json();
-        console.log('Estados recibidos:', data); // 👈 Agregado para depuración
+        console.log('Estados recibidos:', data);
   
         if (Array.isArray(data)) {
           setEstados(data);
@@ -80,10 +90,15 @@ const NuevoExpedientePage: React.FC = () => {
     console.log('Tipo seleccionado:', tipo);
   
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token no encontrado. Inicia sesión.');
+      }
       const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(expedienteConDatos),
       });
@@ -157,7 +172,7 @@ const NuevoExpedientePage: React.FC = () => {
 
           <div className="input-group">
             <label>Estado</label>
-            <input name="estado" value={nuevoExpediente.estado} readOnly disabled />
+            <input name="estado" value={nuevoExpediente.idEstado} readOnly disabled />
           </div>
         </div>
 

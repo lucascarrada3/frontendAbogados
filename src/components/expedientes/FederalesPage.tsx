@@ -1,46 +1,64 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ExpedientesTable from './ExpedientesTable';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/expedientes.css';
+import socket from '../../utils/socket';
 
 
 const FederalesPage: React.FC = () => {
-  const [activos, setActivos] = useState<Expediente[]>([
-    // Tus datos activos
-  ]);
-
-  const [expedientes, setExpedientes] = useState<Expediente[]>([]);
-
-  useEffect(() => {
-    const fetchExpedientes = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/expedientes/federales');
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error('Error al obtener expedientes federales');
-        }
-
-        setExpedientes(data);
-      } catch (error) {
-        console.error(error);
-        alert('Hubo un error al obtener los expedientes federales');
-      }
-    };
-
-    fetchExpedientes();
-  }, []);
-
-  const [finalizados, setFinalizados] = useState<Expediente[]>([
-    // Tus datos finalizados
-  ]);
-
+   const [expedientes, setExpedientes] = useState<Expediente[]>([]);
+  const [atrasados, setAtrasados] = useState<Expediente[]>([]);
+  const [actualizados, setActualizados] = useState<Expediente[]>([]);
+  const [finalizados, setFinalizados] = useState<Expediente[]>([]);
   const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'en curso'>('en curso');
 
+  const fetchExpedientes = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await fetch('http://localhost:3001/expedientes/usuario/federales', {
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Error al obtener expedientes');
+      const data = await response.json();
+      setExpedientes(data);
+      setAtrasados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Atrasado'));
+      setActualizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'En Curso' || e.idEstado === 'Actualizado'));
+      setFinalizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Finalizado'));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpedientes();
+
+    // Escuchar evento del socket
+    socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
+      if (payload.tipo === 'federales') {
+        console.log('Actualización recibida:', payload.mensaje);
+        fetchExpedientes();
+      }
+    });
+
+    return () => {
+      socket.off('expedientes-atrasados');
+    };
+  }, []);
+
+
   const moverAFinalizados = (expediente: Expediente) => {
-    setActivos(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+    if (expediente.idEstado === 'Atrasado') {
+      setAtrasados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+    } else {
+      setActualizados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+    }
+
     setFinalizados(prev => [...prev, { ...expediente, estado: 'Finalizado' }]);
   };
+
 
   return (
     <div className="expedientes-page">
@@ -84,7 +102,7 @@ const FederalesPage: React.FC = () => {
           <ExpedientesTable data={actualizados} onFinalizar={moverAFinalizados} />
         )}
         {currentTab === 'finalizados' && (
-          <ExpedientesTable data={finalizados} />
+          <ExpedientesTable data={finalizados} onFinalizar={() => fetchExpedientes()}/>
         )}
       </div>
     </div>

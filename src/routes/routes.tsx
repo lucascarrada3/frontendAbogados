@@ -7,6 +7,8 @@ import TabsExpedientesPage from '../components/expedientes/TabsExpedientesPage';
 import NuevoExpedientePage from '../components/expedientes/NuevoExpedientePage';
 import ActualizarExpediente from '../components/expedientes/ExpedienteActualizado';
 import LayoutConNavbar from '../layouts/LayoutConNavbar';
+import RutaPrivada from './RutaPrivada';
+
 
 const AppRoutes = () => (
   <BrowserRouter>
@@ -16,7 +18,13 @@ const AppRoutes = () => (
       <Route path="/register" element={<Register />} />
 
       {/* Rutas que incluyen el navbar */}
-      <Route element={<LayoutConNavbar />}>
+      <Route
+          element={
+            <RutaPrivada>
+              <LayoutConNavbar />
+            </RutaPrivada>
+          }
+        >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/expedientes" element={<TabsExpedientesPage />} />
         <Route path="/expedientes/nuevoexpediente" element={<NuevoExpedientePage />} />

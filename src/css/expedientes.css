@@ -45,3 +45,14 @@
     padding: 20px;
   }
   
+  .fila-atrasado {
+  background-color: #ffdddd; /* rojo claro */
+}
+
+.fila-en-curso {
+  background-color: #ddf4ff; /* celeste claro */
+}
+
+.fila-finalizado {
+  background-color: #d4f4d4; /* verde claro */
+}

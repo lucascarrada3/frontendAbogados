@@ -2,45 +2,63 @@ import React, { useEffect, useState } from 'react';
 import ExpedientesTable from './ExpedientesTable';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/expedientes.css';
+import { useNavigate } from 'react-router-dom';
+import socket from '../../utils/socket';
 
 
   const ExtrajudicialesPage: React.FC = () => {
-    const [activos, setActivos] = useState<Expediente[]>([
-      // Tus datos activos
-    ]);
-  
-    const [expedientes, setExpedientes] = useState<Expediente[]>([]);
+       const [expedientes, setExpedientes] = useState<Expediente[]>([]);
+      const [atrasados, setAtrasados] = useState<Expediente[]>([]);
+      const [actualizados, setActualizados] = useState<Expediente[]>([]);
+      const [finalizados, setFinalizados] = useState<Expediente[]>([]);
+      const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'en curso'>('en curso');
+
+    const fetchExpedientes = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Error al obtener expedientes');
+      const data = await response.json();
+      setExpedientes(data);
+      setAtrasados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Atrasado'));
+      setActualizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'En Curso' || e.idEstado === 'Actualizado'));
+      setFinalizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Finalizado'));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchExpedientes = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/expedientes/extrajudiciales');
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error('Error al obtener expedientes provinciales');
-        }
-
-        setExpedientes(data);
-      } catch (error) {
-        console.error(error);
-        alert('Hubo un error al obtener los expedientes provinciales');
-      }
-    };
-
     fetchExpedientes();
-  }, []);
-  
-    const [finalizados, setFinalizados] = useState<Expediente[]>([
-      // Tus datos finalizados
-    ]);
-  
-    const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'en curso'>('en curso');
-  
-    const moverAFinalizados = (expediente: Expediente) => {
-      setActivos(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
-      setFinalizados(prev => [...prev, { ...expediente, estado: 'Finalizado' }]);
+
+    // Escuchar evento del socket
+    socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
+      if (payload.tipo === 'federales') {
+        console.log('Actualización recibida:', payload.mensaje);
+        fetchExpedientes();
+      }
+    });
+
+    return () => {
+      socket.off('expedientes-atrasados');
     };
+  }, []);
+
+  
+
+  const moverAFinalizados = (expediente: Expediente) => {
+    if (expediente.idEstado === 'Atrasado') {
+      setAtrasados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+    } else {
+      setActualizados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+    }
+
+    setFinalizados(prev => [...prev, { ...expediente, estado: 'Finalizado' }]);
+  };
   
     return (
         <div className="expedientes-page">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,41 +8,55 @@ import {
   ColumnDef,
 } from '@tanstack/react-table';
 import { Expediente } from '../../Types/expedientes';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+// import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
 import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp } from 'react-icons/fa';
 import '../../css/expedientesTable.css';
 import { useNavigate } from 'react-router-dom';
+import { getNombreTipo } from '../../utils/mapTipoNombre';
+// import { Tipo } from '../../Types/tipo';
 
 interface Props {
   data: Expediente[];
   onFinalizar?: (expediente: Expediente) => void;
 }
 
+
 const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [pageSize, setPageSize] = useState(5); // Número de filas por página
   const navigate = useNavigate();
+  // const { idExpediente, nombreTipo } = useParams();
   
   const finalizarExpediente = async (expediente: Expediente) => {
-    try {
-      const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {
-        method: 'PUT',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al finalizar expediente');
-      }
-
-      alert('Expediente finalizado correctamente');
-      // expediente.idEstado = "Finalizado";
-      
-      if (onFinalizar) onFinalizar(expediente);
-    } catch (error) {
-      console.error(error);
-      alert('Hubo un error al finalizar el expediente');
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
     }
-  };
+
+    const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al finalizar expediente');
+    }
+
+    alert('Expediente finalizado correctamente');
+
+    if (onFinalizar) onFinalizar(expediente); // ✅ esto recarga la tabla automáticamente
+
+  } catch (error) {
+    console.error(error);
+    alert('Hubo un error al finalizar el expediente');
+  }
+};
+
 
   const columns: ColumnDef<Expediente>[] = [
     { accessorKey: 'numeroExpediente', header: 'N° Exp.' },
@@ -94,21 +108,21 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
         const expediente = row.original;
         return (
           <div className="actions-container">
-            <button className="action-btn" onClick={() => exportOneExpediente(expediente)}>
+            {/* <button className="action-btn" onClick={() => exportOneExpediente(expediente)}>
               PDF
-            </button>
+            </button> */}
             {onFinalizar && Number(expediente.idEstado) !== 4 && (
               <button className="action-btn" onClick={() => finalizarExpediente(expediente)}>
                 Finalizar
               </button>
             )}
-          <button
-          className="action-btn"
-          onClick={() => navigate(`/expedientes/${expediente.idTipo}/${expediente.idExpediente}`)}
-        >
-        Actualizar
-</button>
-
+         <button
+            onClick={() =>
+              navigate(`/expedientes/${getNombreTipo(expediente.idTipo)}/${expediente.idExpediente}`)
+            }
+          >
+            Actualizar
+          </button>
           </div>
         );
       },
@@ -155,7 +169,16 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              className={
+                row.original.idEstado === 'Atrasado'
+                  ? 'fila-atrasado'
+                  : row.original.idEstado === 'Finalizado'
+                  ? 'fila-finalizado'
+                  : 'fila-en-curso'
+              }
+            >
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -202,14 +225,14 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
   );
 };
 
-const exportOneExpediente = (expediente: Expediente) => {
-  const doc = new jsPDF();
-  autoTable(doc, {
-    head: [['Campo', 'Valor']],
-    body: Object.entries(expediente),
-    margin: { top: 30 }
-  });
-  doc.save(`expediente-${expediente.idExpediente}.pdf`);
-};
+// const exportOneExpediente = (expediente: Expediente) => {
+//   const doc = new jsPDF();
+//   autoTable(doc, {
+//     head: [['Campo', 'Valor']],
+//     body: Object.entries(expediente),
+//     margin: { top: 30 }
+//   });
+//   doc.save(`expediente-${expediente.idExpediente}.pdf`);
+// };
 
 export default ExpedientesTable;

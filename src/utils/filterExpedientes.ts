@@ -2,16 +2,22 @@ import { Expediente } from '../Types/expedientes';
 
 export const filterExpedientes = (
   expedientes: Expediente[],
-  jurisdiccion: 'Federal' | 'Provincial',
+  jurisdiccion: 'Federales' | 'Provinciales' | 'Extrajudiciales',
   estado: 'En Curso' | 'Tardado' | 'Finalizado' | 'NoFinalizado'
 ) => {
+  const jurisdiccionMap: { [key: string]: number } = {
+    Federales: 1,
+    Provinciales: 2,
+    Extrajudiciales: 3
+  };
+
   return expedientes.filter(expediente => {
-    const esJurisdiccionCorrecta = expediente.jurisdiccion === jurisdiccion;
-    
+    const esJurisdiccionCorrecta = expediente.idTipo === jurisdiccionMap[jurisdiccion];
+
     if (estado === 'NoFinalizado') {
-      return esJurisdiccionCorrecta && (expediente.estado === 'En Curso' || expediente.estado === 'Tardado');
+      return esJurisdiccionCorrecta && (expediente.idEstado === 'En Curso' || expediente.idEstado === 'Atrasado');
     } else {
-      return esJurisdiccionCorrecta && expediente.estado === estado;
+      return esJurisdiccionCorrecta && expediente.idEstado === estado;
     }
   });
 };

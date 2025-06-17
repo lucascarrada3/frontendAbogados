@@ -3,30 +3,54 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 
+
 const ActualizarExpediente: React.FC = () => {
   const { id, tipo } = useParams<{ id: string; tipo: string }>();
   const [nuevoExpediente, setNuevoExpediente] = useState<Expediente | null>(null);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) return;
 
-    const fetchExpediente = async () => {
-      try {
-        const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`);
-        if (!response.ok) {
-          throw new Error('Error al cargar expediente');
-        }
-        const data = await response.json();
-        setNuevoExpediente(data);
-      } catch (error) {
-        console.error(error);
-        alert('Hubo un error al cargar el expediente');
+  const fetchExpediente = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token no encontrado. Inicia sesión.');
       }
-    };
 
-    fetchExpediente();
-  }, [id, tipo]);
+      console.log(`Llamando a /expedientes/${tipo}/${id}`);
+     const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login'); // Asumiendo que `navigate` está disponible
+          throw new Error('Sesión expirada. Inicia sesión nuevamente.');
+        }
+        throw new Error(`Error al cargar expediente: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      data.idEstado = 2;
+      console.log("Expediente cargado:", data);
+      setNuevoExpediente(data);
+    } catch (error) {
+      console.error(error);
+      alert('Hubo un error al cargar el expediente');
+    }
+  };
+
+  fetchExpediente();
+}, [id, navigate, tipo]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -49,10 +73,15 @@ const ActualizarExpediente: React.FC = () => {
     }
 
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token no encontrado. Inicia sesión.');
+      }
       const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(nuevoExpediente),
       });
@@ -62,7 +91,7 @@ const ActualizarExpediente: React.FC = () => {
       }
 
       alert('Expediente actualizado correctamente');
-      navigate(`/expedientes/${tipo}`);
+      navigate(`/expedientes`);
     } catch (error) {
       console.error(error);
       alert('Hubo un error al actualizar el expediente');
@@ -77,7 +106,7 @@ const ActualizarExpediente: React.FC = () => {
     <div className="nuevo-expediente-container">
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="volver">
-          <button type="button" onClick={() => navigate(`/expedientes/${tipo}`)}>
+          <button type="button" onClick={() => navigate(`/expedientes`)}>
             <span className="icon">←</span>
             <span className="text">Volver</span>
           </button>
@@ -118,13 +147,15 @@ const ActualizarExpediente: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Estado</label>
-            <select name="idEstado" value={nuevoExpediente.idEstado} onChange={handleChange}>
-              <option value={1}>En Curso</option>
-              <option value={2}>Actualizado</option>
-              <option value={3}>Atrasado</option>
-            </select>
-          </div>
+  <label>Estado</label>
+  <input
+    name="idEstado"
+    value="Actualizado"
+    readOnly
+    disabled
+  />
+</div>
+
         </div>
 
         <div className="input-group full-width">
