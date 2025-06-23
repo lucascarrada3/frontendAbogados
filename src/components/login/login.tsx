@@ -16,7 +16,7 @@ const handleLogin = async (e: React.FormEvent) => {
   try {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombreUsuario, password }),
     });
 
