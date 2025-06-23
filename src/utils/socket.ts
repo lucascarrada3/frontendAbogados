@@ -14,7 +14,7 @@ import { io } from 'socket.io-client';
 
 //produccion
 
-const socket = io('https://backendabogados-hsnm.onrender.com', {
+const socket = io('https://backendabogados-w78u.onrender.com', {
   transports: ['websocket'],
   auth: {
     token: localStorage.getItem('token'), // Opcional si tenés auth
