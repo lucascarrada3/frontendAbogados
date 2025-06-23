@@ -17,7 +17,12 @@ const ProvincialesPage: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {
+
+      //local
+      // const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {  
+
+      //produccion
+        const response = await fetch('https://backendabogados-hsnm.onrender.com/expedientes/usuario/extrajudiciales', { 
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Error al obtener expedientes');

@@ -35,8 +35,10 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
     if (!token) {
       throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
     }
-
-    const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {
+//local
+    // const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {  
+    //produccion
+      const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${expediente.idExpediente}/finalizar`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

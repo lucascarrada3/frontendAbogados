@@ -10,7 +10,11 @@ const handleLogin = async (e: React.FormEvent) => {
     const nombreUsuario = (document.getElementById('username') as HTMLInputElement).value;
     const password = (document.getElementById('password') as HTMLInputElement).value;
 
-    const res = await fetch('http://localhost:3001/auth/login', {
+    //local
+    // const res = await fetch('http://localhost:3001/auth/login', {  
+
+        //produccion
+        const res = await fetch('https://backendabogados-hsnm.onrender.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombreUsuario, password }),

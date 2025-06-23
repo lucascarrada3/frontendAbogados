@@ -21,7 +21,10 @@ const ActualizarExpediente: React.FC = () => {
       }
 
       console.log(`Llamando a /expedientes/${tipo}/${id}`);
-     const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
+      //local
+     //const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
+     //produccion
+      const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${tipo}/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +80,12 @@ const ActualizarExpediente: React.FC = () => {
       if (!token) {
         throw new Error('Token no encontrado. Inicia sesión.');
       }
-      const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
+
+      //local
+      // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {  
+
+      //produccion
+        const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

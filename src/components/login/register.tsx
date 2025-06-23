@@ -10,7 +10,12 @@ const handleRegister = async (e: React.FormEvent) => {
     const email = (document.getElementById('email') as HTMLInputElement).value;
     const password = (document.getElementById('password') as HTMLInputElement).value;
 
-    const res = await fetch('http://localhost:3001/auth/register', {
+
+    // Local
+    // const res = await fetch('http://localhost:3001/auth/register', {  
+
+    // Producción
+     const res = await fetch('https://backendabogados-hsnm.onrender.com/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombreCompleto, nombreUsuario, email, password }),

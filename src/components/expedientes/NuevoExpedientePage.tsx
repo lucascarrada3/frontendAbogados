@@ -27,7 +27,12 @@ const NuevoExpedientePage: React.FC = () => {
         if (!token) {
           throw new Error('Token no encontrado. Inicia sesión.');
         }
-        const response = await fetch('http://localhost:3001/estado', {
+
+        //local
+        // const response = await fetch('http://localhost:3001/estado', {  
+
+          //produccion
+          const response = await fetch('https://backendabogados-hsnm.onrender.com/estado', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -94,7 +99,12 @@ const NuevoExpedientePage: React.FC = () => {
       if (!token) {
         throw new Error('Token no encontrado. Inicia sesión.');
       }
-      const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {
+
+      //local
+      // const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {  
+
+        //produccion
+        const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${tipo}`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
