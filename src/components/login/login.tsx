@@ -3,32 +3,38 @@ import '../../css/login.css'; // 👈 Aquí importas el CSS desde la carpeta ext
 import logo from '../../assets/logoclarito.jpg'; // Tu logo
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+import { API_URL } from '../../utils/api';
 
 const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const nombreUsuario = (document.getElementById('username') as HTMLInputElement).value;
-    const password = (document.getElementById('password') as HTMLInputElement).value;
+  e.preventDefault();
 
-    //local
-    // const res = await fetch('http://localhost:3001/auth/login', {  
+  const nombreUsuario = (document.getElementById('username') as HTMLInputElement).value;
+  const password = (document.getElementById('password') as HTMLInputElement).value;
+  const token = localStorage.getItem('token');
+  if (!token) return;
 
-        //produccion
-        const res = await fetch('https://backendabogados-hsnm.onrender.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombreUsuario, password }),
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ nombreUsuario, password }),
     });
 
     const data = await res.json();
+
     if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', data.usuario.nombre);
-        window.location.href = '/dashboard';
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.usuario.nombre);
+      window.location.href = '/dashboard';
     } else {
-        alert(data.error);
+      alert(data.error || 'Error en el login');
     }
+  } catch (error) {
+    alert('Error de conexión o inesperado');
+    console.error(error);
+  }
 };
+
 
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../css/register.css'; // 👈 Nuevo CSS para el registro
 import logo from '../../assets/logoclarito.jpg';
+import { API_URL } from '../../utils/api';
 
 
 const handleRegister = async (e: React.FormEvent) => {
@@ -15,7 +16,7 @@ const handleRegister = async (e: React.FormEvent) => {
     // const res = await fetch('http://localhost:3001/auth/register', {  
 
     // Producción
-     const res = await fetch('https://backendabogados-hsnm.onrender.com/auth/register', {
+     const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombreCompleto, nombreUsuario, email, password }),

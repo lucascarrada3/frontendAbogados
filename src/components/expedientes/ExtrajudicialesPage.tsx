@@ -3,6 +3,7 @@ import ExpedientesTable from './ExpedientesTable';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/expedientes.css';
 import socket from '../../utils/socket';
+import { API_URL } from '../../utils/api';
 
 
   const ExtrajudicialesPage: React.FC = () => {
@@ -20,7 +21,7 @@ import socket from '../../utils/socket';
       //local
       // const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {  
         //produccion
-         const response = await fetch('https://backendabogados-hsnm.onrender.com/expedientes/usuario/extrajudiciales', { 
+         const response = await fetch(`${API_URL}/expedientes/usuario/extrajudiciales`, { 
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Error al obtener expedientes');

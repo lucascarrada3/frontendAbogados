@@ -14,6 +14,7 @@ import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp } from 'react-icons/
 import '../../css/expedientesTable.css';
 import { useNavigate } from 'react-router-dom';
 import { getNombreTipo } from '../../utils/mapTipoNombre';
+import { API_URL } from '../../utils/api';
 // import { Tipo } from '../../Types/tipo';
 
 interface Props {
@@ -38,7 +39,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
 //local
     // const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {  
     //produccion
-      const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${expediente.idExpediente}/finalizar`, {
+      const response = await fetch(`${API_URL}/expedientes/${expediente.idExpediente}/finalizar`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

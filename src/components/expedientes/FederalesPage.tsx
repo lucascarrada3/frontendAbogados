@@ -20,7 +20,7 @@ const FederalesPage: React.FC = () => {
       //local
       // const response = await fetch('http://localhost:3001/expedientes/usuario/federales', {  
       //produccion
-        const response = await fetch('https://backendabogados-hsnm.onrender.com/expedientes/usuario/federales', {
+        const response = await fetch(`${API_URL}/expedientes/usuario/federales`, {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Error al obtener expedientes');

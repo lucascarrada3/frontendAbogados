@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
+import { API_URL } from '../../utils/api';
 
 
 const ActualizarExpediente: React.FC = () => {
@@ -24,7 +25,7 @@ const ActualizarExpediente: React.FC = () => {
       //local
      //const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
      //produccion
-      const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${tipo}/${id}`, {
+      const response = await fetch(`${API_URL}/expedientes/${tipo}/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ const ActualizarExpediente: React.FC = () => {
       // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {  
 
       //produccion
-        const response = await fetch(`https://backendabogados-hsnm.onrender.com/expedientes/${nuevoExpediente.idExpediente}`, {
+        const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

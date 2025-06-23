@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import '../../css/dashboard.css';
+import { API_URL } from '../../utils/api';
 
 const COLORS = ['#062B82', '#228B8D', '#F4A300'];
 
@@ -49,7 +50,7 @@ const Dashboard: React.FC = () => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {
+            const response = await fetch(`${API_URL}/expedientes/${tipo}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
