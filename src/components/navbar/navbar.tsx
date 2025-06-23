@@ -4,127 +4,128 @@ import logo from '../../assets/logonavbar.jpg';
 import usuario from '../../assets/usuario.png';
 import menu from '../../assets/menu.jpg';
 
-//iconos para los expedientes  FaGavel, FaLandmark cuando se necesiten
-
-
 import { FaTachometerAlt, FaFolderOpen } from 'react-icons/fa';
 
 interface NavbarProps {
-    username: string;
+  username: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ username }) => {
-    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const userDropdownRef = useRef<HTMLDivElement>(null);
-    const [isSidebarInteractive, setIsSidebarInteractive] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarInteractive, setIsSidebarInteractive] = useState(false);
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Cargar la opción activa desde localStorage al montar
+  useEffect(() => {
+    const storedItem = localStorage.getItem('sidebarActiveItem');
+    if (storedItem) {
+      setActiveItem(storedItem);
+    }
+  }, []);
 
-    const handleUserButtonClick = () => {
-        setIsUserDropdownOpen(!isUserDropdownOpen);
-        if (isUserDropdownOpen) {
-            setIsUserDropdownOpen(false);
-        }
-    };
+  const handleUserButtonClick = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
+  };
 
-    const handleMenuButtonClick = () => {
-        const opening = !isSidebarOpen;
-        setIsSidebarOpen(opening);
-    
-        if (opening) {
-            // Esperamos 300ms para que la animación termine antes de permitir clics
-            setTimeout(() => setIsSidebarInteractive(true), 300);
-        } else {
-            setIsSidebarInteractive(false);
-        }
-    };
+  const handleMenuButtonClick = () => {
+    const opening = !isSidebarOpen;
+    setIsSidebarOpen(opening);
 
-    
-    const handleLogout = () => {
+    if (opening) {
+      setTimeout(() => setIsSidebarInteractive(true), 300);
+    } else {
+      setIsSidebarInteractive(false);
+    }
+  };
+
+  const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('ultimaActividad');
     localStorage.removeItem('username');
     window.location.href = '/';
+  };
+
+  const handleSidebarItemClick = (item: string, path: string) => {
+    setActiveItem(item);
+    localStorage.setItem('sidebarActiveItem', item);
+    setIsSidebarOpen(false);
+    setIsSidebarInteractive(false);
+    window.location.href = path;
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false);
+      }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
-                setIsUserDropdownOpen(false);
-            }
-        };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+  return (
+    <>
+      <nav className="navbar">
+        <div className="navbar-left">
+          <img src={logo} alt="Logo Estudio Romano" className="navbar-logo" />
+        </div>
+        <div className="navbar-right" ref={userDropdownRef}>
+          <button className="user-button" onClick={handleUserButtonClick}>
+            <img src={usuario} alt="Usuario" className="usuario-logo" />
+          </button>
+          <div className={`user-dropdown ${isUserDropdownOpen ? 'open' : ''}`}>
+            <p><strong>Usuario: </strong> {username}</p>
+            <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
+          </div>
+          <button className="menu-button" onClick={handleMenuButtonClick}>
+            <img src={menu} alt="Menú" className="menu-logo" />
+          </button>
+        </div>
+      </nav>
 
-    // const [isExpedientesDropdownOpen, setIsExpedientesDropdownOpen] = useState(false);
+      {!isSidebarOpen && (
+        <div className="sidebar-handle" onClick={handleMenuButtonClick}></div>
+      )}
 
-    return (
-        <>
-            <nav className="navbar">
-                <div className="navbar-left">
-                    <img src={logo} alt="Logo Estudio Romano" className="navbar-logo" />
-                </div>
-                <div className="navbar-right" ref={userDropdownRef}>
-                    
-                    <button className="user-button" onClick={handleUserButtonClick}>
-                        <img src={usuario} alt="Usuario" className="usuario-logo" />
-                    </button>
-                    <div className={`user-dropdown ${isUserDropdownOpen ? 'open' : ''}`}>
-                        <p><strong>Usuario: </strong> {username}</p>
-                        <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
-                    </div>
-                    <button className="menu-button" onClick={handleMenuButtonClick}>
-                        <img src={menu} alt="Menú" className="menu-logo" />
-                    </button>
-                </div>
-            </nav>
-
-                {!isSidebarOpen && (
-                    <div className="sidebar-handle" onClick={handleMenuButtonClick}></div>
-                )}
-
-                <div className={`sidebar ${isSidebarOpen ? 'open' : ''} ${isSidebarInteractive ? 'interactive' : ''}`}>
-                <ul>
-                    <li>
-                    <FaTachometerAlt className="sidebar-icon" />
-                    {isSidebarOpen && (
-                        <span
-                        className="dropdown-title"
-                        onClick={() => window.location.href = '/dashboard'}
-                        style={{ cursor: 'pointer' }}
-                        >
-                        Dashboard
-                        </span>
-                    )}
-                    </li>
-
-                    <li onClick={() => window.location.href = '/expedientes'}>
-                    <FaFolderOpen className="sidebar-icon" />
-                    {isSidebarOpen && (
-                        <span className="dropdown-title" style={{ cursor: 'pointer' }}>
-                        Expedientes
-                        </span>
-                    )}
-                    </li>
-                </ul>
-                </div>
-
-            {/* Sombra de fondo */}
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''} ${isSidebarInteractive ? 'interactive' : ''}`}>
+        <ul>
+          <li
+            className={activeItem === 'dashboard' ? 'active' : ''}
+            onClick={() => handleSidebarItemClick('dashboard', '/dashboard')}
+          >
+            <FaTachometerAlt className="sidebar-icon" />
             {isSidebarOpen && (
-                <div
-                    className="sidebar-overlay"
-                    onClick={() => {
-                    setIsSidebarOpen(false);
-                    // setIsExpedientesDropdownOpen(false); 
-                    }}
-                />
+              <span className="dropdown-title">Dashboard</span>
             )}
-        </>
-    );
+          </li>
+          <li
+            className={activeItem === 'expedientes' ? 'active' : ''}
+            onClick={() => handleSidebarItemClick('expedientes', '/expedientes')}
+          >
+            <FaFolderOpen className="sidebar-icon" />
+            {isSidebarOpen && (
+              <span className="dropdown-title">Expedientes</span>
+            )}
+          </li>
+        </ul>
+      </div>
+
+      {isSidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => {
+            setIsSidebarOpen(false);
+            setIsSidebarInteractive(false);
+          }}
+        />
+      )}
+    </>
+  );
 };
 
 export default Navbar;
