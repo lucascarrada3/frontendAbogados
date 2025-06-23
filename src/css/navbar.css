@@ -8,6 +8,7 @@
     padding: 0 20px;
     color: white;
     position: fixed;
+    z-index: 1100; /* más que sidebar (1001) */
 }
 
 .navbar-logo {
@@ -58,7 +59,7 @@
     width: 200px;
     opacity: 0;
     transform: translateY(-10px) translateZ(0); /* <-- Agregamos translateZ */
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: right 0.3s ease, transform 0.3s ease;
     pointer-events: none;
     z-index: 9999;
 }
@@ -92,17 +93,29 @@
 
 .sidebar {
     position: fixed;
-    top: 60px; /* ajustalo según la altura del navbar */
-    right: -250px; /* oculto al inicio */
+    top: 60px; 
+    right: -250px; 
     width: 250px;
     height: 100%;
     background-color: #f2f2f2;
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
     padding: 20px;
-    transition: right 0.3s ease;
+    transition: right 0.3s ease, transform 0.3s ease;
     z-index: 1001;
+    cursor: default;
     pointer-events: none;
 }
+
+.sidebar-handle {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1002; /* por encima del sidebar pero debajo del navbar */
+}
+
 
 .sidebar.open {
     right: 0;
@@ -173,10 +186,6 @@
     font-size: 14px;
 }
 
-.sidebar-icon {
-    margin-right: 10px;
-    font-size: 18px;
-}
 
 .submenu {
     margin-top: 10px;

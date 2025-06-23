@@ -28,16 +28,16 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     };
 
     const handleMenuButtonClick = () => {
-    const opening = !isSidebarOpen;
-    setIsSidebarOpen(opening);
+        const opening = !isSidebarOpen;
+        setIsSidebarOpen(opening);
     
-    if (opening) {
-        // Esperamos 300ms para que la animación termine antes de permitir clics
-        setTimeout(() => setIsSidebarInteractive(true), 300);
-    } else {
-        setIsSidebarInteractive(false);
-    }
-};
+        if (opening) {
+            // Esperamos 300ms para que la animación termine antes de permitir clics
+            setTimeout(() => setIsSidebarInteractive(true), 300);
+        } else {
+            setIsSidebarInteractive(false);
+        }
+    };
 
     
     const handleLogout = () => {
@@ -83,44 +83,9 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                 </div>
             </nav>
 
-            {/* Sidebar del Menú */}
-            {/* <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-                <ul>
-                    <li>
-                    <FaTachometerAlt className="sidebar-icon" />
-                    {isSidebarOpen && <span className="dropdown-title" onClick={() => window.location.href = '/dashboard'} style={{ cursor: 'pointer' }}>Dashboard</span>}
-                    </li>
-                    <li>
-                    <div 
-                        className="dropdown-container"
-                        onClick={() => setIsExpedientesDropdownOpen(!isExpedientesDropdownOpen)}
-                    >
-                        <FaFolderOpen className="sidebar-icon" />
-                        {isSidebarOpen && (
-                        <>
-                            <span className="dropdown-title">Expedientes</span>
-                            <span className={`dropdown-arrow ${isExpedientesDropdownOpen ? 'open' : ''}`}>
-                            {isExpedientesDropdownOpen ? '▼' : '▶'}
-                            </span>
-                        </>
-                        )}
-                    </div>
-
-                    {isExpedientesDropdownOpen && isSidebarOpen && (
-                        <ul className="submenu">
-                        <li>
-                          <FaGavel className="sidebar-icon" /> 
-                          <span onClick={() => window.location.href = '/expedientes'} style={{ cursor: 'pointer' }}>Federales</span>
-                        </li>
-                        <li>
-                          <FaLandmark className="sidebar-icon" /> 
-                          <span onClick={() => window.location.href = '/expedientes'} style={{ cursor: 'pointer' }}>Provinciales</span>
-                        </li>
-                      </ul>
-                    )}
-                    </li>
-                </ul>
-                </div> */}
+                {!isSidebarOpen && (
+                    <div className="sidebar-handle" onClick={handleMenuButtonClick}></div>
+                )}
 
                 <div className={`sidebar ${isSidebarOpen ? 'open' : ''} ${isSidebarInteractive ? 'interactive' : ''}`}>
                 <ul>
