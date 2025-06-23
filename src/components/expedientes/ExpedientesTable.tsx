@@ -11,6 +11,7 @@ import { Expediente } from '../../Types/expedientes';
 // import jsPDF from 'jspdf';
 // import autoTable from 'jspdf-autotable';
 import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import '../../css/expedientesTable.css';
 import { useNavigate } from 'react-router-dom';
 import { getNombreTipo } from '../../utils/mapTipoNombre';
@@ -35,7 +36,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
-    }
+  }
 //local
     // const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {  
     //produccion
@@ -61,6 +62,33 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
   }
 };
 
+  const eliminarExpediente = async (expediente: Expediente) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(`${API_URL}/expedientes/delete/${expediente.idExpediente}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Error al eliminar el expediente');
+    }
+
+    alert('Expediente eliminado correctamente');
+    window.location.reload();
+  } catch (error) {
+    console.error('Error al eliminar expediente:', error);
+    alert('Error al eliminar el expediente');
+  }
+};
 
   const columns: ColumnDef<Expediente>[] = [
     { accessorKey: 'numeroExpediente', header: 'N° Exp.' },
@@ -116,7 +144,9 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
               PDF
             </button> */}
             {onFinalizar && Number(expediente.idEstado) !== 4 && (
-              <button className="action-btn" onClick={() => finalizarExpediente(expediente)}>
+              <button onClick={() => finalizarExpediente(expediente)}
+               style={{ backgroundColor: '#008f39', border: 'none' }}
+              >
                 Finalizar
               </button>
             )}
@@ -124,9 +154,22 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
             onClick={() =>
               navigate(`/expedientes/${getNombreTipo(expediente.idTipo)}/${expediente.idExpediente}`)
             }
+             style={{ backgroundColor: '#FDD817', border: 'none' }}
           >
             Actualizar
           </button>
+            <button
+            className="action-btn"
+            onClick={() => {
+              if (window.confirm('¿Estás seguro de que querés eliminar este expediente?')) {
+                eliminarExpediente(expediente);
+              }
+            }}
+            style={{ color: 'red', backgroundColor: 'transparent', border: 'none' }}
+            title="Eliminar"
+          >
+        <FaTrash size={18} />
+      </button>
           </div>
         );
       },
@@ -239,15 +282,5 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
     </div>
   );
 };
-
-// const exportOneExpediente = (expediente: Expediente) => {
-//   const doc = new jsPDF();
-//   autoTable(doc, {
-//     head: [['Campo', 'Valor']],
-//     body: Object.entries(expediente),
-//     margin: { top: 30 }
-//   });
-//   doc.save(`expediente-${expediente.idExpediente}.pdf`);
-// };
 
 export default ExpedientesTable;
