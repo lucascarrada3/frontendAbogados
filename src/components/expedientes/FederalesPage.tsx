@@ -3,6 +3,7 @@ import ExpedientesTable from './ExpedientesTable';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/expedientes.css';
 import socket from '../../utils/socket';
+import { API_URL } from '../../utils/api';
 
 
 const FederalesPage: React.FC = () => {
