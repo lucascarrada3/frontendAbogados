@@ -1,5 +1,6 @@
 // src/utils/socket.ts
 import { io } from 'socket.io-client';
+import { API_URL } from './api';
 
 
 //local
@@ -14,7 +15,7 @@ import { io } from 'socket.io-client';
 
 //produccion
 
-const socket = io('https://backendabogados-w78u.onrender.com', {
+const socket = io(`${API_URL}`, {
   transports: ['websocket'],
   auth: {
     token: localStorage.getItem('token'), // Opcional si tenés auth
