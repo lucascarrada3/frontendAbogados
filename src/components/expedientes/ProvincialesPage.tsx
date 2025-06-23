@@ -23,62 +23,88 @@ const ProvincialesPage: React.FC = () => {
       if (!response.ok) throw new Error('Error al obtener expedientes');
       const data = await response.json();
       setExpedientes(data);
-      setAtrasados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Atrasado'));
-      setActualizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'En Curso' || e.idEstado === 'Actualizado'));
-      setFinalizados(data.filter((e: { idEstado: string; }) => e.idEstado === 'Finalizado'));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setAtrasados(data.filter((e: any) => Number(e.idEstado) === 3));
+      setActualizados(data.filter((e: { idEstado: number }) => e.idEstado === 2));
+      setFinalizados(data.filter((e: { idEstado: number }) => e.idEstado === 4));
+      setExpedientes(data.filter((e: { idEstado: number }) => e.idEstado === 1));
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
+  fetchExpedientes();
+
+  const intervalId = setInterval(() => {
     fetchExpedientes();
+  }, 1000); // Cada 10 segundos
 
-    // Escuchar evento del socket
-    socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
-      if (payload.tipo === 'federales') {
-        console.log('Actualización recibida:', payload.mensaje);
-        fetchExpedientes();
-      }
-    });
+  // Escuchar evento del socket
+  socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
+    if (payload.tipo === 'federales') {
+      console.log('Actualización recibida:', payload.mensaje);
+      fetchExpedientes();
+    }
+  });
 
-    return () => {
-      socket.off('expedientes-atrasados');
-    };
-  }, []);
+  return () => {
+    socket.off('expedientes-atrasados');
+    clearInterval(intervalId); // Limpia el intervalo al desmontar
+  };
+}, []);
 
   
 
-  const moverAFinalizados = (expediente: Expediente) => {
-    if (expediente.idEstado === 'Atrasado') {
-      setAtrasados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
-    } else {
-      setActualizados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
-    }
+    const moverAFinalizados = (expediente: Expediente) => {
+      if (expediente.idEstado === 'Atrasado') {
+        setAtrasados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+      } else {
+        setActualizados(prev => prev.filter(e => e.idExpediente !== expediente.idExpediente));
+      }
 
-    setFinalizados(prev => [...prev, { ...expediente, estado: 'Finalizado' }]);
-  };
+      setFinalizados(prev => [...prev, { ...expediente, estado: 'Finalizado' }]);
+
+      // 🔄 Refrescar datos desde el backend
+      fetchExpedientes();
+    };
 
 
-  return (
+
+   return (
     <div className="expedientes-page">
-      <h2 className="titulo-expediente">Expedientes Provinciales</h2>
-
+      <h2 className="titulo-expediente">Expedientes Federales</h2>
+      
       <div className="tabs-container">
-        <button className={`tab-button ${currentTab === 'en curso' ? 'active' : ''}`} onClick={() => setCurrentTab('en curso')}>
+        <button
+          className={`tab-button ${currentTab === 'en curso' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('en curso')}
+        >
           En Curso
         </button>
-        <button className={`tab-button ${currentTab === 'atrasados' ? 'active' : ''}`} onClick={() => setCurrentTab('atrasados')}>
-          Atrasados
-        </button>
-        <button className={`tab-button ${currentTab === 'actualizados' ? 'active' : ''}`} onClick={() => setCurrentTab('actualizados')}>
+        <button
+          className={`tab-button ${currentTab === 'actualizados' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('actualizados')}
+        >
           Actualizados
         </button>
-        <button className={`tab-button ${currentTab === 'finalizados' ? 'active' : ''}`} onClick={() => setCurrentTab('finalizados')}>
+        <button
+          className={`tab-button ${currentTab === 'atrasados' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('atrasados')}
+        >
+          Atrasados
+        </button>
+        <button
+          className={`tab-button ${currentTab === 'finalizados' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('finalizados')}
+        >
           Finalizados
         </button>
       </div>
 
+
+      <div className="tabla-container">
       {currentTab === 'en curso' && (
           <ExpedientesTable data={expedientes} onFinalizar={moverAFinalizados} />
         )}
@@ -89,10 +115,10 @@ const ProvincialesPage: React.FC = () => {
           <ExpedientesTable data={actualizados} onFinalizar={moverAFinalizados} />
         )}
         {currentTab === 'finalizados' && (
-          <ExpedientesTable data={finalizados} />
+          <ExpedientesTable data={finalizados} onFinalizar={() => fetchExpedientes()}/>
         )}
+      </div>
     </div>
   );
 };
-
 export default ProvincialesPage;

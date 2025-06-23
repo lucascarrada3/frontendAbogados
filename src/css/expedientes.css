@@ -56,3 +56,11 @@
 .fila-finalizado {
   background-color: #d4f4d4; /* verde claro */
 }
+
+.tabla-mensaje {
+  padding: 2rem;
+  text-align: center;
+  align-items: center;
+  color: #777;
+  font-style: italic;
+}

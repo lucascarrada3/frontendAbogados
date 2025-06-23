@@ -17,6 +17,8 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const userDropdownRef = useRef<HTMLDivElement>(null);
+    const [isSidebarInteractive, setIsSidebarInteractive] = useState(false);
+
 
     const handleUserButtonClick = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
@@ -26,11 +28,17 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     };
 
     const handleMenuButtonClick = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-        // if (isSidebarOpen) {
-        //     setIsExpedientesDropdownOpen(false);
-        // }
-    };
+    const opening = !isSidebarOpen;
+    setIsSidebarOpen(opening);
+    
+    if (opening) {
+        // Esperamos 300ms para que la animación termine antes de permitir clics
+        setTimeout(() => setIsSidebarInteractive(true), 300);
+    } else {
+        setIsSidebarInteractive(false);
+    }
+};
+
     
     const handleLogout = () => {
     localStorage.removeItem('token');
@@ -114,7 +122,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
                 </ul>
                 </div> */}
 
-                <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+                <div className={`sidebar ${isSidebarOpen ? 'open' : ''} ${isSidebarInteractive ? 'interactive' : ''}`}>
                 <ul>
                     <li>
                     <FaTachometerAlt className="sidebar-icon" />

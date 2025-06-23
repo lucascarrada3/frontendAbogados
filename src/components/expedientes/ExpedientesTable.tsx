@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -19,10 +19,11 @@ import { getNombreTipo } from '../../utils/mapTipoNombre';
 interface Props {
   data: Expediente[];
   onFinalizar?: (expediente: Expediente) => void;
+  isLoading?: boolean;
 }
 
 
-const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
+const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [pageSize, setPageSize] = useState(5); // Número de filas por página
   const navigate = useNavigate();
@@ -168,25 +169,36 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar }) => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr
-              key={row.id}
-              className={
-                row.original.idEstado === 'Atrasado'
-                  ? 'fila-atrasado'
-                  : row.original.idEstado === 'Finalizado'
-                  ? 'fila-finalizado'
-                  : 'fila-en-curso'
-              }
-            >
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {isLoading ? (
+            <tr>
+              <td colSpan={columns.length} className="tabla-mensaje" style={{ textAlign: 'center' }}>Cargando...</td>
             </tr>
-          ))}
+          ) : table.getRowModel().rows.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="tabla-mensaje" style={{ textAlign: 'center' }}>Tabla sin resultados</td>
+            </tr>
+          ) : (
+            table.getRowModel().rows.map(row => (
+              <tr
+                key={row.id}
+                className={
+                  row.original.idEstado === 'Atrasado'
+                    ? 'fila-atrasado'
+                    : row.original.idEstado === 'Finalizado'
+                    ? 'fila-finalizado'
+                    : 'fila-en-curso'
+                }
+              >
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
+
       </table>
       
       <div className="pagination-container">
