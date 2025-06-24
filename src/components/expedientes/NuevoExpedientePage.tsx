@@ -17,7 +17,7 @@ const NuevoExpedientePage: React.FC = () => {
     idTipo: 1, 
   });  
 
-  const [tipo, setTipo] = useState<'federales' | 'provinciales' | 'extrajudiciales'>('federales');
+  const [tipo, setTipo] = useState<'federales' | 'provinciales' | 'extrajudiciales'>('provinciales');
   const [estados, setEstados] = useState<{ idEstado: number, estado: string }[]>([]);
   const navigate = useNavigate();
 
@@ -144,8 +144,8 @@ const NuevoExpedientePage: React.FC = () => {
           <div className="input-group">
             <label>Tipo</label>
             <select name="tipo" value={tipo} onChange={handleChange} required>
-              <option value="federales">Federales</option>
               <option value="provinciales">Provinciales</option>
+              <option value="federales">Federales</option>              
               <option value="extrajudiciales">Extrajudiciales</option>
             </select>
           </div>
@@ -177,7 +177,7 @@ const NuevoExpedientePage: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Proveído</label>
+            <label>Último Proveído</label>
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
           </div>
 

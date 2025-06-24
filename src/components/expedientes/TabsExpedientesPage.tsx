@@ -16,20 +16,20 @@ const TabsExpedientesPage: React.FC = () => {
           onClick={() => setTab('provinciales')}
           className={`tab-button ${tab === 'provinciales' ? 'active' : ''}`}
         >
-          Provinciales
+          Fuero Provincial
         </button>
         <button
           onClick={() => setTab('federales')}
           className={`tab-button ${tab === 'federales' ? 'active' : ''}`}
         >
-          Federales
+          Fuero Federal
         </button>
         
         <button
           onClick={() => setTab('extrajudiciales')}
           className={`tab-button ${tab === 'extrajudiciales' ? 'active' : ''}`}
         >
-          Extrajudiciales
+         Extrajudicial
         </button>
         <div className="nuevoexp">
         <button

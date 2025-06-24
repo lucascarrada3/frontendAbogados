@@ -95,7 +95,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
     { accessorKey: 'juzgado', header: 'Juzgado' },
     { accessorKey: 'fecha', header: 'Fecha' },
     { accessorKey: 'caratula', header: 'Carátula' },
-    { accessorKey: 'proveido', header: 'Proveído' },
+    { accessorKey: 'proveido', header: 'Último Proveído' },
     { accessorKey: 'observaciones', header: 'Observaciones' },
     {
       accessorKey: 'idEstado',
