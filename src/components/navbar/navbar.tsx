@@ -47,6 +47,26 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
     window.location.href = '/';
   };
 
+  // 👇 Deslogueo solo al cerrar la pestaña (no en recarga)
+  useEffect(() => {
+    const onPageHide = (event: PageTransitionEvent) => {
+      if (!event.persisted) {
+        setTimeout(() => {
+          if (document.visibilityState === 'hidden') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('ultimaActividad');
+            localStorage.removeItem('username');
+          }
+        }, 50);
+      }
+    };
+
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, []);
+
   const handleSidebarItemClick = (item: string, path: string) => {
     setActiveItem(item);
     localStorage.setItem('sidebarActiveItem', item);
