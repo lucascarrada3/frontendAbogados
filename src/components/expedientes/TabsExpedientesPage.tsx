@@ -5,7 +5,7 @@ import ExtrajudicialesPage from './ExtrajudicialesPage';
 import '../../css/TabsExpedientesPage.css';
 
 const TabsExpedientesPage: React.FC = () => {
-  const [tab, setTab] = useState<'federales' | 'provinciales' | 'extrajudiciales' | 'nuevoexpediente'>('federales');
+  const [tab, setTab] = useState<'provinciales' | 'federales' |  'extrajudiciales' | 'nuevoexpediente'>('provinciales');
 
   return (
     <div style={{ padding: '50px' }}>
@@ -13,17 +13,18 @@ const TabsExpedientesPage: React.FC = () => {
 
       <div className="tabs-container">
         <button
-          onClick={() => setTab('federales')}
-          className={`tab-button ${tab === 'federales' ? 'active' : ''}`}
-        >
-          Federales
-        </button>
-        <button
           onClick={() => setTab('provinciales')}
           className={`tab-button ${tab === 'provinciales' ? 'active' : ''}`}
         >
           Provinciales
         </button>
+        <button
+          onClick={() => setTab('federales')}
+          className={`tab-button ${tab === 'federales' ? 'active' : ''}`}
+        >
+          Federales
+        </button>
+        
         <button
           onClick={() => setTab('extrajudiciales')}
           className={`tab-button ${tab === 'extrajudiciales' ? 'active' : ''}`}
@@ -40,8 +41,8 @@ const TabsExpedientesPage: React.FC = () => {
       </div>
 
       <div>
-        {tab === 'federales' && <FederalesPage />}
         {tab === 'provinciales' && <ProvincialesPage />}
+        {tab === 'federales' && <FederalesPage />}        
         {tab === 'extrajudiciales' && <ExtrajudicialesPage />}
       </div>
     </div>
