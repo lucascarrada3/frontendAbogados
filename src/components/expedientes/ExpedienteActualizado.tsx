@@ -151,7 +151,7 @@ const ActualizarExpediente: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Ultimo Proveído</label>
+            <label>Ultimo Movimiento</label>
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
           </div>
 

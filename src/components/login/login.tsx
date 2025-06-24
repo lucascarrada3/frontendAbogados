@@ -1,9 +1,9 @@
-import React from 'react';
-import '../../css/login.css'; // 👈 Aquí importas el CSS desde la carpeta externa
-import logo from '../../assets/logoclarito.jpg'; // Tu logo
+import React, { useEffect, useState } from 'react';
+import '../../css/login.css';
+import logo from '../../assets/logoclarito.jpg';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { API_URL } from '../../utils/api';
+import { Eye, EyeOff } from 'lucide-react'; // 👈 Importamos los íconos
 
 const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,18 +26,16 @@ const handleLogin = async (e: React.FormEvent) => {
     }
 };
 
-
-
-
 const Login: React.FC = () => {
     const location = useLocation();
     const [mensaje, setMensaje] = useState('');
+    const [mostrarPassword, setMostrarPassword] = useState(false);
 
-        useEffect(() => {
-            if (location.state && location.state.mensaje) {
-                setMensaje(location.state.mensaje);
-            }
-        }, [location]);
+    useEffect(() => {
+        if (location.state && location.state.mensaje) {
+            setMensaje(location.state.mensaje);
+        }
+    }, [location]);
 
     return (
         <div className="container">
@@ -45,7 +43,7 @@ const Login: React.FC = () => {
                 <img src={logo} alt="Estudio Romano" className="logo" />
             </div>
             <div className="right-section">
-                <div className="form-container">
+                <div className="form-container2">
                     {mensaje && <div style={{ color: 'red', marginBottom: '10px' }}>{mensaje}</div>}
                     <form onSubmit={handleLogin}>
                         <div className="input-group">
@@ -54,14 +52,34 @@ const Login: React.FC = () => {
                         </div>
                         <div className="input-group">
                             <label htmlFor="password">Contraseña</label>
-                            <input type="password" id="password" name="password" required />
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type={mostrarPassword ? 'text' : 'password'}
+                                    id="password"
+                                    name="password"
+                                    required
+                                    style={{ paddingRight: '10px' }}
+                                />
+                                <span
+                                    onClick={() => setMostrarPassword(!mostrarPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '20px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer',
+                                        color: '#888'
+                                    }}
+                                >
+                                    {mostrarPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </span>
+                            </div>
                         </div>
                         <div className="actions">
                             <button type="submit">Iniciar Sesión</button>
                             <a href="/register">Registrarse</a>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

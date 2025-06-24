@@ -23,8 +23,12 @@ const handleRegister = async (e: React.FormEvent) => {
     });
 
     const data = await res.json();
-    if (res.ok) alert("Usuario creado exitosamente");
-    else alert(data.error);
+    if (res.ok) {
+        alert("Usuario creado exitosamente");
+        window.location.href = '/login';
+    } else {
+        alert(data.error);
+    }
 };
 
 
@@ -35,7 +39,7 @@ const Register: React.FC = () => {
                 <img src={logo} alt="Estudio Romano" className="logo" />
             </div>
             <div className="right-section">
-                <div className="form-container">
+                <div className="form-container3">
                     <h2>Registrarse</h2>
                     <form onSubmit={handleRegister}>
                         <div className="input-group">

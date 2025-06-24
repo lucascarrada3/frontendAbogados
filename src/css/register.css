@@ -25,12 +25,12 @@
     align-items: center;
 }
 
-.form-container {
+.form-container3 {
     width: 350px;
     padding: 25px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     border-radius: 10px;
-    background-color: #fff;
+    background-color: #e0dfdf;
 }
 
 .input-group {

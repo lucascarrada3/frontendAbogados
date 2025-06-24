@@ -156,7 +156,7 @@ const NuevoExpedientePage: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Fecha</label>
+            <label>Fecha de inicio</label>
             <input
               name="fecha"
               type="date"
@@ -177,7 +177,7 @@ const NuevoExpedientePage: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Último Proveído</label>
+            <label>Último Movimiento</label>
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
           </div>
 
