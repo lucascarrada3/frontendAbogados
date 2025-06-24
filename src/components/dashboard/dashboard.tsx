@@ -24,26 +24,29 @@ const Dashboard: React.FC = () => {
     }
 
     const agruparPorEstado = (expedientes: Expediente[]): EstadoGroup[] => {
-        const estadoCount: EstadoCount = {
-            'Pendientes': 0,
-            'Finalizados': 0,
-            'En curso': 0
-        };
-
-        expedientes.forEach((exp) => {
-            const estado = exp.estado?.toLowerCase() || '';
-
-            if (estado.includes('pendiente')) {
-                estadoCount['Pendientes'] += 1;
-            } else if (estado.includes('final')) {
-                estadoCount['Finalizados'] += 1;
-            } else {
-                estadoCount['En curso'] += 1;
-            }
-        });
-
-        return Object.entries(estadoCount).map(([name, value]) => ({ name, value }));
+    const estadoCount: EstadoCount = {
+        'Pendientes': 0,
+        'Actualizados': 0,
+        'Atrasados': 0,
+        'Finalizados': 0
     };
+
+    expedientes.forEach((exp) => {
+        const estado = exp.estado?.toLowerCase() || '';
+
+        if (estado.includes('pendiente')) {
+            estadoCount['Pendientes'] += 1;
+        } else if (estado.includes('final')) {
+            estadoCount['Finalizados'] += 1;
+        } else if (estado.includes('atrasado')) {
+            estadoCount['Atrasados'] += 1;
+        } else if (estado.includes('actualizado') || estado.includes('curso')) {
+            estadoCount['Actualizados'] += 1;
+        }
+    });
+
+    return Object.entries(estadoCount).map(([name, value]) => ({ name, value }));
+};
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     const fetchExpedientes = async (tipo: string, setter: Function) => {

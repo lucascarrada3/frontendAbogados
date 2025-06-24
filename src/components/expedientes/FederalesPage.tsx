@@ -11,7 +11,7 @@ const FederalesPage: React.FC = () => {
   const [atrasados, setAtrasados] = useState<Expediente[]>([]);
   const [actualizados, setActualizados] = useState<Expediente[]>([]);
   const [finalizados, setFinalizados] = useState<Expediente[]>([]);
-  const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'en curso'>('en curso');
+  const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'pendientes'>('pendientes');
 
   const fetchExpedientes = async () => {
     const token = localStorage.getItem('token');
@@ -81,10 +81,10 @@ const moverAFinalizados = (expediente: Expediente) => {
       
       <div className="tabs-container">
         <button
-          className={`tab-button ${currentTab === 'en curso' ? 'active' : ''}`}
-          onClick={() => setCurrentTab('en curso')}
+          className={`tab-button ${currentTab === 'pendientes' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('pendientes')}
         >
-          En Curso
+          Pendientes
         </button>
         <button
           className={`tab-button ${currentTab === 'actualizados' ? 'active' : ''}`}
@@ -108,7 +108,7 @@ const moverAFinalizados = (expediente: Expediente) => {
 
 
       <div className="tabla-container">
-      {currentTab === 'en curso' && (
+      {currentTab === 'pendientes' && (
           <ExpedientesTable data={expedientes} onFinalizar={moverAFinalizados} />
         )}
         {currentTab === 'atrasados' && (

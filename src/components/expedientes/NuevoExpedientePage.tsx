@@ -13,7 +13,7 @@ const NuevoExpedientePage: React.FC = () => {
     caratula: '',
     proveido: '',
     observaciones: '',
-    idEstado: 'En Curso',
+    idEstado: 'Pendientes',
     idTipo: 1, 
   });  
 
@@ -79,10 +79,10 @@ const NuevoExpedientePage: React.FC = () => {
       return;
     }
   
-    const estadoSeleccionado = estados.find((estado) => estado.estado === 'En Curso');
+    const estadoSeleccionado = estados.find((estado) => estado.estado === 'Pendientes');
   
     if (!estadoSeleccionado) {
-      alert('Estado "En Curso" no encontrado');
+      alert('Estado "Pendientes" no encontrado');
       return;
     }
   

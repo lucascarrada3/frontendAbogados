@@ -3,7 +3,7 @@ import { Expediente } from '../Types/expedientes';
 export const filterExpedientes = (
   expedientes: Expediente[],
   jurisdiccion: 'Federales' | 'Provinciales' | 'Extrajudiciales',
-  estado: 'En Curso' | 'Tardado' | 'Finalizado' | 'NoFinalizado'
+  estado: 'Pendientes' | 'Tardado' | 'Finalizado' | 'NoFinalizado'
 ) => {
   const jurisdiccionMap: { [key: string]: number } = {
     Federales: 1,
@@ -15,7 +15,7 @@ export const filterExpedientes = (
     const esJurisdiccionCorrecta = expediente.idTipo === jurisdiccionMap[jurisdiccion];
 
     if (estado === 'NoFinalizado') {
-      return esJurisdiccionCorrecta && (expediente.idEstado === 'En Curso' || expediente.idEstado === 'Atrasado');
+      return esJurisdiccionCorrecta && (expediente.idEstado === 'Pendientes' || expediente.idEstado === 'Atrasado');
     } else {
       return esJurisdiccionCorrecta && expediente.idEstado === estado;
     }

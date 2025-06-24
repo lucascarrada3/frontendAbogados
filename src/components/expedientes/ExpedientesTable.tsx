@@ -107,7 +107,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
 
         switch (idEstado) {
           case 1:
-            estadoNombre = 'En Curso';
+            estadoNombre = 'Pendientes';
             icon = <FaSpinner color="blue" />;
             break;
           case 2:

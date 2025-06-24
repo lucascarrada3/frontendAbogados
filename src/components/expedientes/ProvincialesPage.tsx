@@ -10,7 +10,7 @@ const ProvincialesPage: React.FC = () => {
     const [atrasados, setAtrasados] = useState<Expediente[]>([]);
     const [actualizados, setActualizados] = useState<Expediente[]>([]);
     const [finalizados, setFinalizados] = useState<Expediente[]>([]);
-    const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'en curso'>('en curso');
+    const [currentTab, setCurrentTab] = useState<'atrasados' | 'actualizados' | 'finalizados' | 'pendientes'>('pendientes');
 
 
   const fetchExpedientes = async () => {
@@ -80,14 +80,14 @@ const ProvincialesPage: React.FC = () => {
 
    return (
     <div className="expedientes-page">
-      <h2 className="titulo-expediente">Expedientes Federales</h2>
+      <h2 className="titulo-expediente">Expedientes Provinciales</h2>
       
       <div className="tabs-container">
         <button
-          className={`tab-button ${currentTab === 'en curso' ? 'active' : ''}`}
-          onClick={() => setCurrentTab('en curso')}
+          className={`tab-button ${currentTab === 'pendientes' ? 'active' : ''}`}
+          onClick={() => setCurrentTab('pendientes')}
         >
-          En Curso
+          Pendientes
         </button>
         <button
           className={`tab-button ${currentTab === 'actualizados' ? 'active' : ''}`}
@@ -111,7 +111,7 @@ const ProvincialesPage: React.FC = () => {
 
 
       <div className="tabla-container">
-      {currentTab === 'en curso' && (
+      {currentTab === 'pendientes' && (
           <ExpedientesTable data={expedientes} onFinalizar={moverAFinalizados} />
         )}
         {currentTab === 'atrasados' && (

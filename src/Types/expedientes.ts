@@ -8,5 +8,5 @@ export type Expediente = {
   caratula: string;
   proveido: string;
   observaciones: string;
-  idEstado: 'Atrasado' | 'En Curso' | 'Finalizado' | 'Actualizado';
+  idEstado: 'Atrasado' | 'Pendientes' | 'Finalizado' | 'Actualizado';
 };
