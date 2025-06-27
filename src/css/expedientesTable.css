@@ -50,11 +50,11 @@
     color: white;
   }
   
-  .expedientes-table td button:last-child {
+  /* .expedientes-table td button:last-child {
     background-color: #198754;
     color: white;
   }
-  
+   */
   .expedientes-table td button:hover {
     opacity: 0.9;
   }
@@ -90,3 +90,35 @@
   border: 1px solid #ccc;
   background-color: white;
 }
+
+.observacion-celda {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.texto-cortado {
+  white-space: nowrap;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  max-width: 160px; /* Ajustá según el ancho de tu celda */
+  display: inline-block;
+}
+
+.ver-mas-btn {
+  background: none;
+  border: none;
+  color: #007BFF;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0 !important;
+  text-decoration: underline;
+}
+
+.ver-mas-btn:hover {
+  color: #0056b3;
+}
+
+
+

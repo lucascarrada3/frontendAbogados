@@ -3,11 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 import { API_URL } from '../../utils/api';
+import Modal from '../Modal/Modal';
+import { FaCheckCircle } from 'react-icons/fa';
 
 
 const ActualizarExpediente: React.FC = () => {
   const { id, tipo } = useParams<{ id: string; tipo: string }>();
   const [nuevoExpediente, setNuevoExpediente] = useState<Expediente | null>(null);
+  const [modalExito, setModalExito] = useState(false);
+  const [modalError, setModalError] = useState(false);
   const navigate = useNavigate();
   
 
@@ -56,19 +60,19 @@ const ActualizarExpediente: React.FC = () => {
 }, [id, navigate, tipo]);
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNuevoExpediente((prev) =>
-      prev
-        ? {
-            ...prev,
-            [name]: name === 'idEstado' ? parseInt(value) : value,
-          }
-        : null
-    );
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setNuevoExpediente((prev) =>
+        prev
+          ? {
+              ...prev,
+              [name]: name === 'idEstado' ? parseInt(value) : value,
+            }
+          : null
+      );
+    };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!nuevoExpediente || !nuevoExpediente.idExpediente) {
@@ -82,30 +86,45 @@ const ActualizarExpediente: React.FC = () => {
         throw new Error('Token no encontrado. Inicia sesión.');
       }
 
-      //local
-      // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {  
+    const payload = {
+      numeroExpediente: nuevoExpediente.numeroExpediente,
+      juzgado: nuevoExpediente.juzgado,
+      caratula: nuevoExpediente.caratula,
+      proveido: nuevoExpediente.proveido,
+      observaciones: nuevoExpediente.observaciones,
+      idEstado: nuevoExpediente.idEstado,
+      idTipo: nuevoExpediente.idTipo,
+      fechaActualizacion: nuevoExpediente.fechaActualizacion,
+    };
 
-      //produccion
-        const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
+
+      const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-           'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(nuevoExpediente),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         throw new Error('Error al actualizar expediente');
       }
 
-      alert('Expediente actualizado correctamente');
-      navigate(`/expedientes`);
+      console.log('Expediente actualizado:', payload);
+      setModalExito(true);
+      setTimeout(() => {
+        navigate('/expedientes');
+      }, 2000);
     } catch (error) {
       console.error(error);
-      alert('Hubo un error al actualizar el expediente');
+      setModalError(true);
+       setTimeout(() => {
+        navigate('/expedientes');
+      }, 2000);
     }
   };
+
 
   if (!nuevoExpediente) {
     return <div>Cargando...</div>;
@@ -130,11 +149,11 @@ const ActualizarExpediente: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Fecha de actualización</label>
+            <label>Ultimo Movimiento</label>
             <input
-              name="fecha"
+              name="fechaActualizacion"
               type="date"
-              value={nuevoExpediente.fecha?.split('T')[0] ?? ''}
+              value={nuevoExpediente.fechaActualizacion?.split('T')[0] ?? ''}
               onChange={handleChange}
               required
             />
@@ -150,10 +169,10 @@ const ActualizarExpediente: React.FC = () => {
             <input name="caratula" value={nuevoExpediente.caratula} onChange={handleChange} required />
           </div>
 
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>Ultimo Movimiento</label>
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
-          </div>
+          </div> */}
 
           <div className="input-group">
   <label>Estado</label>
@@ -182,6 +201,20 @@ const ActualizarExpediente: React.FC = () => {
           <button type="submit">Actualizar Expediente</button>
         </div>
       </form>
+      <Modal isOpen={modalExito} onClose={() => setModalExito(false)}>
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <h3>Expediente actualizado correctamente</h3>
+          <p>Serás redirigido en un momento...</p>
+        </div>
+      </Modal>
+       <Modal isOpen={modalError} onClose={() => setModalError(false)}>
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <h3>Error al actualizar el expediente</h3>
+          <p>Serás redirigido en un momento...</p>
+        </div>
+      </Modal>
     </div>
   );
 };

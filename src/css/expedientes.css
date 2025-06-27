@@ -45,16 +45,20 @@
     padding: 20px;
   }
   
-  .fila-atrasado {
-  background-color: #d42121; /* rojo claro */
+.fila-atrasado {
+  background-color: #ffd6d6 !important; /* rojo claro */
 }
 
 .fila-en-curso {
-  background-color: #ddf4ff; /* celeste claro */
+  background-color: #ddf4ff !important; /* celeste claro */
 }
 
 .fila-finalizado {
-  background-color: #d4f4d4; /* verde claro */
+  background-color: #d4f4d4 !important; /* verde claro */
+}
+
+.fila-actualizado {
+  background-color: #fff9cc !important; /* amarillo clarito */
 }
 
 .tabla-mensaje {

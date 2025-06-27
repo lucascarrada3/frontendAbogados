@@ -6,17 +6,17 @@ import {
   getPaginationRowModel,
   flexRender,
   ColumnDef,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table';
 import { Expediente } from '../../Types/expedientes';
-// import jsPDF from 'jspdf';
-// import autoTable from 'jspdf-autotable';
-import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp } from 'react-icons/fa';
+import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp, FaExclamationCircle } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
 import '../../css/expedientesTable.css';
 import { useNavigate } from 'react-router-dom';
 import { getNombreTipo } from '../../utils/mapTipoNombre';
 import { API_URL } from '../../utils/api';
-// import { Tipo } from '../../Types/tipo';
+import Modal from '../Modal/Modal';
 
 interface Props {
   data: Expediente[];
@@ -24,79 +24,132 @@ interface Props {
   isLoading?: boolean;
 }
 
-
 const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [pageSize, setPageSize] = useState(5); // Número de filas por página
+  const [pageSize, setPageSize] = useState(5);
   const navigate = useNavigate();
-  // const { idExpediente, nombreTipo } = useParams();
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [modalObservacion, setModalObservacion] = useState<string | null>(null);
   
+  // Estado para modal confirmación
+  const [modalConfirm, setModalConfirm] = useState<{
+    mensaje: string;
+    onConfirm: () => void;
+  } | null>(null);
+  
+  // Estado para modal mensajes exito/error
+  const [modalMensaje, setModalMensaje] = useState<{
+    tipo: 'error' | 'exito';
+    texto: string;
+  } | null>(null);
+
   const finalizarExpediente = async (expediente: Expediente) => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
-  }
-//local
-    // const response = await fetch(`http://localhost:3001/expedientes/${expediente.idExpediente}/finalizar`, {  
-    //produccion
-      const response = await fetch(`${API_URL}/expedientes/${expediente.idExpediente}/finalizar`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
       }
-    });
+      const response = await fetch(`${API_URL}/expedientes/${expediente.idExpediente}/finalizar`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Error al finalizar expediente');
+      }
+      setModalMensaje({ tipo: 'exito', texto: 'Expediente finalizado correctamente' });
+      if (onFinalizar) onFinalizar(expediente);
 
-    if (!response.ok) {
-      throw new Error('Error al finalizar expediente');
+      // Puedes actualizar la tabla aquí sin recargar, si usas onFinalizar
+      // Si quieres recargar la página, descomenta:
+      // setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      console.error(error);
+      setModalMensaje({ tipo: 'error', texto: 'Hubo un error al finalizar el expediente' });
     }
-
-    alert('Expediente finalizado correctamente');
-
-    if (onFinalizar) onFinalizar(expediente); // ✅ esto recarga la tabla automáticamente
-
-  } catch (error) {
-    console.error(error);
-    alert('Hubo un error al finalizar el expediente');
-  }
-};
+  };
 
   const eliminarExpediente = async (expediente: Expediente) => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No se encontró el token de autenticación. Por favor, inicia sesión.');
+      }
+      const response = await fetch(`${API_URL}/expedientes/delete/${expediente.idExpediente}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al eliminar el expediente');
+      }
+      setModalMensaje({ tipo: 'exito', texto: 'Expediente eliminado correctamente' });
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      console.error('Error al eliminar expediente:', error);
+      setModalMensaje({ tipo: 'error', texto: 'Error al eliminar el expediente' });
     }
+  };
 
-    const response = await fetch(`${API_URL}/expedientes/delete/${expediente.idExpediente}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Error al eliminar el expediente');
+  const getEstadoClass = (idEstado: number) => {
+    switch (idEstado) {
+      case 1: return 'fila-en-curso';
+      case 2: return 'fila-actualizado';
+      case 3: return 'fila-atrasado';
+      case 4: return 'fila-finalizado';
+      default: return '';
     }
-
-    alert('Expediente eliminado correctamente');
-    window.location.reload();
-  } catch (error) {
-    console.error('Error al eliminar expediente:', error);
-    alert('Error al eliminar el expediente');
-  }
-};
+  };
 
   const columns: ColumnDef<Expediente>[] = [
     { accessorKey: 'numeroExpediente', header: 'N° Exp.' },
     { accessorKey: 'juzgado', header: 'Juzgado' },
-    { accessorKey: 'fecha', header: 'Fecha' },
+    { 
+      accessorKey: 'fecha',
+      header: 'Fecha de inicio',
+      enableSorting: true,
+      cell: info => {
+        const rawDate = info.getValue() as string;
+        const date = new Date(rawDate);
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+        return date.toISOString().split('T')[0];
+      },
+    },
+    { 
+      accessorKey: 'fechaActualizacion',
+      header: 'Último Movimiento',
+      enableSorting: true,
+      cell: info => {
+        const rawDate = info.getValue() as string;
+        const date = new Date(rawDate);
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); 
+        return date.toISOString().split('T')[0]; 
+      },
+    },
     { accessorKey: 'caratula', header: 'Carátula' },
-    { accessorKey: 'proveido', header: 'Último Movimiento' },
-    { accessorKey: 'observaciones', header: 'Observaciones' },
+    {
+      accessorKey: 'observaciones',
+      header: 'Observaciones',
+      cell: ({ getValue }) => {
+        const fullText = getValue() as string;
+        const isLong = fullText.length > 18;
+        return (
+          <div className="observacion-celda">
+            <span className="texto-cortado">{fullText}</span>
+            {isLong && (
+              <button className="ver-mas-btn" onClick={() => setModalObservacion(fullText)}>
+                ...ver más
+              </button>
+            )}
+          </div>
+        );
+      }
+    },
     {
       accessorKey: 'idEstado',
       header: 'Estado',
@@ -104,7 +157,6 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
         const idEstado = getValue() as number;
         let estadoNombre = '';
         let icon = null;
-
         switch (idEstado) {
           case 1:
             estadoNombre = 'Pendientes';
@@ -125,7 +177,6 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
           default:
             estadoNombre = 'Sin Estado';
         }
-
         return (
           <div className="estado-cell">
             {icon} <span>{estadoNombre}</span>
@@ -140,36 +191,46 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
         const expediente = row.original;
         return (
           <div className="actions-container">
-            {/* <button className="action-btn" onClick={() => exportOneExpediente(expediente)}>
-              PDF
-            </button> */}
             {onFinalizar && Number(expediente.idEstado) !== 4 && (
-              <button onClick={() => finalizarExpediente(expediente)}
-               style={{ backgroundColor: '#008f39', border: 'none' }}
+              <button
+                onClick={() =>
+                  setModalConfirm({
+                    mensaje: '¿Estás seguro que quieres finalizar el expediente?',
+                    onConfirm: () => {
+                      finalizarExpediente(expediente);
+                      setModalConfirm(null);
+                    },
+                  })
+                }
+                style={{ backgroundColor: '#008f39', border: 'none' }}
               >
                 Finalizar
               </button>
             )}
-         <button
-            onClick={() =>
-              navigate(`/expedientes/${getNombreTipo(expediente.idTipo)}/${expediente.idExpediente}`)
-            }
-             style={{ backgroundColor: '#FDD817', border: 'none' }}
-          >
-            Actualizar
-          </button>
             <button
-            className="action-btn"
-            onClick={() => {
-              if (window.confirm('¿Estás seguro de que querés eliminar este expediente?')) {
-                eliminarExpediente(expediente);
+              onClick={() =>
+                navigate(`/expedientes/${getNombreTipo(expediente.idTipo)}/${expediente.idExpediente}`)
               }
-            }}
-            style={{ color: 'red', backgroundColor: 'transparent', border: 'none' }}
-            title="Eliminar"
-          >
-        <FaTrash size={18} />
-      </button>
+              style={{ backgroundColor: '#FDD817', border: 'none' }}
+            >
+              Actualizar
+            </button>
+            <button
+              className="action-btn"
+              onClick={() =>
+                setModalConfirm({
+                  mensaje: '¿Estás seguro que quiere eliminar este expediente? Una vez eliminado no podrá recuperarse.',
+                  onConfirm: () => {
+                    eliminarExpediente(expediente);
+                    setModalConfirm(null);
+                  },
+                })
+              }
+              style={{ color: 'red', backgroundColor: 'transparent', border: 'none' }}
+              title="Eliminar"
+            >
+              <FaTrash size={18} />
+            </button>
           </div>
         );
       },
@@ -181,10 +242,12 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
     columns,
     state: {
       globalFilter,
+      sorting,
     },
-    onGlobalFilterChange: setGlobalFilter,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
@@ -207,8 +270,16 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
           {table.getHeaderGroups().map(group => (
             <tr key={group.id}>
               {group.headers.map(header => (
-                <th key={header.id}>
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{ cursor: header.column.getCanSort() ? 'pointer' : 'default' }}
+                >
                   {flexRender(header.column.columnDef.header, header.getContext())}
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[header.column.getIsSorted() as string] ?? null}
                 </th>
               ))}
             </tr>
@@ -225,16 +296,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
             </tr>
           ) : (
             table.getRowModel().rows.map(row => (
-              <tr
-                key={row.id}
-                className={
-                  row.original.idEstado === 'Atrasado'
-                    ? 'fila-atrasado'
-                    : row.original.idEstado === 'Finalizado'
-                    ? 'fila-finalizado'
-                    : 'fila-en-curso'
-                }
-              >
+              <tr key={row.id} className={getEstadoClass(Number(row.original.idEstado))}>
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -244,9 +306,8 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
             ))
           )}
         </tbody>
-
       </table>
-      
+
       <div className="pagination-container">
         <button
           className="pagination-button"
@@ -265,12 +326,11 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
         >
           Siguiente
         </button>
-        
         <select
           value={pageSize}
           onChange={e => {
             setPageSize(Number(e.target.value));
-            table.setPageSize(Number(e.target.value)); // Establece el tamaño de página
+            table.setPageSize(Number(e.target.value));
           }}
           className="page-size-selector"
         >
@@ -279,6 +339,93 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
           <option value={15}>15</option>
         </select>
       </div>
+
+      {/* Modal Confirmación */}
+      <Modal isOpen={!!modalConfirm} onClose={() => setModalConfirm(null)}>
+        <header style={{ backgroundColor: '#062B82', padding: '10px', borderRadius: '4px 4px 0 0' }}>
+          <h3 style={{ margin: 0 }}>Confirmación</h3>
+        </header>
+        <p>{modalConfirm?.mensaje}</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem' }}>
+          <button
+            onClick={() => setModalConfirm(null)}
+            style={{
+              backgroundColor: '#ccc',
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={() => {
+              modalConfirm?.onConfirm();
+              setModalConfirm(null);
+            }}
+            style={{
+              backgroundColor: '#d9534f',
+              color: '#fff',
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Confirmar
+          </button>
+        </div>
+      </Modal>
+
+      {/* Modal Mensaje Exito/Error */}
+      <Modal isOpen={!!modalMensaje} onClose={() => setModalMensaje(null)}>
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          {modalMensaje?.tipo === 'exito' ? (
+            <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          ) : (
+            <FaExclamationCircle size={48} color="red" style={{ marginBottom: '1rem' }} />
+          )}
+          <h3>{modalMensaje?.texto}</h3>
+          <button
+            onClick={() => setModalMensaje(null)}
+            style={{
+              marginTop: '1rem',
+              backgroundColor: '#007bff',
+              color: '#fff',
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Cerrar
+          </button>
+        </div>
+      </Modal>
+
+      {/* Modal Observacion texto largo */}
+      <Modal isOpen={!!modalObservacion} onClose={() => setModalObservacion(null)}>
+        <div style={{ padding: '1rem' }}>
+          <h3>Observaciones</h3>
+          <p>{modalObservacion}</p>
+          <button
+            onClick={() => setModalObservacion(null)}
+            style={{
+              marginTop: '1rem',
+              backgroundColor: '#007bff',
+              color: '#fff',
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Cerrar
+          </button>
+        </div>
+      </Modal>
+
     </div>
   );
 };

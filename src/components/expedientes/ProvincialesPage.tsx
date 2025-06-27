@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ExpedientesTable from './ExpedientesTable';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/expedientes.css';
-import socket from '../../utils/socket';
+// import socket from '../../utils/socket';
 import { API_URL } from '../../utils/api';
 
 const ProvincialesPage: React.FC = () => {
@@ -40,26 +40,30 @@ const ProvincialesPage: React.FC = () => {
     }
   };
 
- useEffect(() => {
-  fetchExpedientes();
-
-  const intervalId = setInterval(() => {
+  useEffect(() => {
     fetchExpedientes();
-  }, 1000); // Cada 10 segundos
+    }, []);
 
-  // Escuchar evento del socket
-  socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
-    if (payload.tipo === 'federales') {
-      console.log('Actualización recibida:', payload.mensaje);
-      fetchExpedientes();
-    }
-  });
+//  useEffect(() => {
+//   fetchExpedientes();
 
-  return () => {
-    socket.off('expedientes-atrasados');
-    clearInterval(intervalId); // Limpia el intervalo al desmontar
-  };
-}, []);
+//   const intervalId = setInterval(() => {
+//     fetchExpedientes();
+//   }, 1000); // Cada 10 segundos
+
+//   // Escuchar evento del socket
+//   socket.on('expedientes-atrasados', (payload: { tipo: string, mensaje: string }) => {
+//     if (payload.tipo === 'federales') {
+//       console.log('Actualización recibida:', payload.mensaje);
+//       fetchExpedientes();
+//     }
+//   });
+
+//   return () => {
+//     socket.off('expedientes-atrasados');
+//     clearInterval(intervalId); // Limpia el intervalo al desmontar
+//   };
+// }, []);
 
   
 

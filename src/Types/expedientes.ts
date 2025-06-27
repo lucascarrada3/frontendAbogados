@@ -9,4 +9,5 @@ export type Expediente = {
   proveido: string;
   observaciones: string;
   idEstado: 'Atrasado' | 'Pendientes' | 'Finalizado' | 'Actualizado';
+  fechaActualizacion?: string;
 };

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 import { API_URL } from '../../utils/api';
+import Modal from '../Modal/Modal';
+import { FaCheckCircle } from 'react-icons/fa';
 
 const NuevoExpedientePage: React.FC = () => {
   const [nuevoExpediente, setNuevoExpediente] = useState<Expediente>({
@@ -19,6 +21,8 @@ const NuevoExpedientePage: React.FC = () => {
 
   const [tipo, setTipo] = useState<'federales' | 'provinciales' | 'extrajudiciales'>('provinciales');
   const [estados, setEstados] = useState<{ idEstado: number, estado: string }[]>([]);
+  const [modalExito, setModalExito] = useState(false);
+  const [modalError, setModalError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -119,11 +123,16 @@ const NuevoExpedientePage: React.FC = () => {
         console.error('Error en respuesta:', errorData);
         throw new Error(errorData.error || 'Error al crear expediente');
       }
-  
-      navigate('/expedientes');
+      setModalExito(true);
+      setTimeout(() => {
+        navigate('/expedientes');
+      }, 2000);
     } catch (error) {
       console.error('Error al crear expediente:', error);
-      alert('Hubo un error al crear el expediente');
+      setModalError(true);
+       setTimeout(() => {
+        navigate('/expedientes');
+      }, 2000);
     }
   };
   
@@ -176,10 +185,10 @@ const NuevoExpedientePage: React.FC = () => {
             <input name="caratula" value={nuevoExpediente.caratula} onChange={handleChange} required />
           </div>
 
-          <div className="input-group">
+          {/* <div className="input-group">
             <label>Último Movimiento</label>
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
-          </div>
+          </div> */}
 
           <div className="input-group">
             <label>Estado</label>
@@ -202,6 +211,21 @@ const NuevoExpedientePage: React.FC = () => {
           <button type="submit">Crear Expediente</button>
         </div>
       </form>
+      <Modal isOpen={modalExito} onClose={() => setModalExito(false)}>
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <h3>Expediente creado correctamente</h3>
+          <p>Serás redirigido en un momento...</p>
+        </div>
+      </Modal>
+
+      <Modal isOpen={modalError} onClose={() => setModalError(false)}>
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <h3>Error al crear el expediente</h3>
+          <p>Serás redirigido en un momento...</p>
+        </div>
+      </Modal>
     </div>
   );
 };
