@@ -97,8 +97,11 @@ const ActualizarExpediente: React.FC = () => {
       fechaActualizacion: nuevoExpediente.fechaActualizacion,
     };
 
+//local
+      // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
 
-      const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
+      //produccion
+      const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
