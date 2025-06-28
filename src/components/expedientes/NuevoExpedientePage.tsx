@@ -4,7 +4,7 @@ import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 import { API_URL } from '../../utils/api';
 import Modal from '../Modal/Modal';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 const NuevoExpedientePage: React.FC = () => {
   const [nuevoExpediente, setNuevoExpediente] = useState<Expediente>({
@@ -34,10 +34,10 @@ const NuevoExpedientePage: React.FC = () => {
         }
 
         //local
-        // const response = await fetch('http://localhost:3001/estado', {  
+        const response = await fetch('http://localhost:3001/estado', {  
 
           //produccion
-          const response = await fetch(`${API_URL}/estado`, {
+          // const response = await fetch(`${API_URL}/estado`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -106,10 +106,10 @@ const NuevoExpedientePage: React.FC = () => {
       }
 
       //local
-      // const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {  
+      const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {  
 
         //produccion
-        const response = await fetch(`${API_URL}/expedientes/${tipo}`, { 
+        // const response = await fetch(`${API_URL}/expedientes/${tipo}`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ const NuevoExpedientePage: React.FC = () => {
 
       <Modal isOpen={modalError} onClose={() => setModalError(false)}>
         <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <FaExclamationCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
           <h3>Error al crear el expediente</h3>
           <p>Serás redirigido en un momento...</p>
         </div>

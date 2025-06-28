@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import '../../css/dashboard.css';
 import { API_URL } from '../../utils/api';
 import type { Expediente } from '../../Types/expedientes'; // Ajusta ruta
+import GoogleCalendarLoginButton from '../googleCalendar/GoogleCalendarLoginButton';
 
 const COLORS = ['#062B82', '#228B8D', '#F4A300'];
 
@@ -121,6 +122,9 @@ const Dashboard: React.FC = () => {
         {renderPieChart(datosFederales, 'Federales')}
         {renderPieChart(datosProvinciales, 'Provinciales')}
         {renderPieChart(datosExtrajudiciales, 'Extrajudiciales')}
+      </div>
+      <div className="google-calendar-button-container" style={{ textAlign: 'center', marginTop: '20px' }}>
+        <GoogleCalendarLoginButton />
       </div>
     </div>
   );

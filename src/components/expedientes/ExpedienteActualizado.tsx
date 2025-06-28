@@ -4,7 +4,7 @@ import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 import { API_URL } from '../../utils/api';
 import Modal from '../Modal/Modal';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 
 const ActualizarExpediente: React.FC = () => {
@@ -27,9 +27,9 @@ const ActualizarExpediente: React.FC = () => {
 
       console.log(`Llamando a /expedientes/${tipo}/${id}`);
       //local
-     //const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
+     const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
      //produccion
-      const response = await fetch(`${API_URL}/expedientes/${tipo}/${id}`, {
+      // const response = await fetch(`${API_URL}/expedientes/${tipo}/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -98,10 +98,10 @@ const ActualizarExpediente: React.FC = () => {
     };
 
 //local
-      // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
+      const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
 
       //produccion
-      const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
+      // const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ const ActualizarExpediente: React.FC = () => {
       </Modal>
        <Modal isOpen={modalError} onClose={() => setModalError(false)}>
         <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
+          <FaExclamationCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
           <h3>Error al actualizar el expediente</h3>
           <p>Serás redirigido en un momento...</p>
         </div>

@@ -20,10 +20,10 @@ const ProvincialesPage: React.FC = () => {
     try {
 
       //local
-      // const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {  
+      const response = await fetch('http://localhost:3001/expedientes/usuario/extrajudiciales', {  
 
       //produccion
-        const response = await fetch(`${API_URL}/expedientes/usuario/provinciales`, { 
+        // const response = await fetch(`${API_URL}/expedientes/usuario/provinciales`, { 
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Error al obtener expedientes');

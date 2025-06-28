@@ -1,0 +1,15 @@
+.btn-google-calendar {
+  background-color: #4285f4;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.btn-google-calendar:hover {
+  background-color: #3367d6;
+}
