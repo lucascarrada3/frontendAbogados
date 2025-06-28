@@ -34,10 +34,10 @@ const NuevoExpedientePage: React.FC = () => {
         }
 
         //local
-        const response = await fetch('http://localhost:3001/estado', {  
+        // const response = await fetch('http://localhost:3001/estado', {  
 
           //produccion
-          // const response = await fetch(`${API_URL}/estado`, {
+          const response = await fetch(`${API_URL}/estado`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

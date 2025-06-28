@@ -3,7 +3,7 @@ import '../../css/navbar.css';
 import logo from '../../assets/logonavbar.jpg';
 import usuario from '../../assets/usuario.png';
 import menu from '../../assets/menu.jpg';
-import { FaCalendarAlt } from 'react-icons/fa';
+// import { FaCalendarAlt } from 'react-icons/fa';
 
 import { FaTachometerAlt, FaFolderOpen } from 'react-icons/fa';
 
