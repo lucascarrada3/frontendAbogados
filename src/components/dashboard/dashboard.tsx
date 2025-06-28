@@ -124,7 +124,7 @@ const Dashboard: React.FC = () => {
         {renderPieChart(datosExtrajudiciales, 'Extrajudiciales')}
       </div>
       <div className="google-calendar-button-container" style={{ textAlign: 'center', marginTop: '20px' }}>
-        <GoogleCalendarLoginButton />
+        {/* <GoogleCalendarLoginButton /> */}
       </div>
     </div>
   );

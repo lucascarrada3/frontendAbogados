@@ -133,13 +133,13 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
               <span className="dropdown-title">Expedientes</span>
             )}
           </li>
-          <li
+          {/* <li
             className={activeItem === 'googleCalendar' ? 'active' : ''}
             onClick={() => handleSidebarItemClick('googleCalendar', '/oauth2callback')}
           >
             <FaCalendarAlt className="sidebar-icon" />
             {isSidebarOpen && <span className="dropdown-title">Google Calendar</span>}
-          </li>
+          </li> */}
         </ul>
       </div>
 

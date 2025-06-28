@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from 'react';
-// import moment from 'moment';
+// import moment from 'moment-timezone';
 // import { Calendar, momentLocalizer, Event as CalendarEvent } from 'react-big-calendar';
 // import 'react-big-calendar/lib/css/react-big-calendar.css';
 // import { parseISO } from 'date-fns';
@@ -13,9 +13,14 @@
 //   end: { dateTime: string };
 // }
 
-// const GoogleCalendarView: React.FC = () => {
+// const GoogleCalendarDashboard: React.FC = () => {
 //   const [eventos, setEventos] = useState<CalendarEvent[]>([]);
-//   const [nuevoEvento, setNuevoEvento] = useState({ summary: '', start: '', end: '' });
+//   const [nuevoEvento, setNuevoEvento] = useState({
+//     summary: '',
+//     start: '',
+//     end: '',
+//   });
+
 //   const token = localStorage.getItem('token');
 //   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -38,17 +43,14 @@
 //       .catch((err) => console.error('Error al traer eventos:', err));
 //   };
 
-//   useEffect(() => {
-//     obtenerEventos();
-//   }, []);
-
 //   const handleSubmit = (e: React.FormEvent) => {
 //     e.preventDefault();
+//     if (!token) return;
 
-//     const eventoFormateado = {
+//     const eventData = {
 //       summary: nuevoEvento.summary,
-//       start: new Date(nuevoEvento.start).toISOString(),
-//       end: new Date(nuevoEvento.end).toISOString(),
+//       start: moment.tz(nuevoEvento.start, 'America/Argentina/Buenos_Aires').toISOString(),
+//       end: moment.tz(nuevoEvento.end, 'America/Argentina/Buenos_Aires').toISOString(),
 //     };
 
 //     fetch(`${API_URL}/googleCalendar/create-event`, {
@@ -57,7 +59,7 @@
 //         'Content-Type': 'application/json',
 //         Authorization: `Bearer ${token}`,
 //       },
-//       body: JSON.stringify(eventoFormateado),
+//       body: JSON.stringify(eventData),
 //     })
 //       .then((res) => {
 //         if (!res.ok) throw new Error('Error al crear evento');
@@ -65,8 +67,8 @@
 //       })
 //       .then(() => {
 //         alert('Evento creado correctamente');
-//         obtenerEventos(); // refrescar calendario
 //         setNuevoEvento({ summary: '', start: '', end: '' });
+//         obtenerEventos(); // refrescar calendario
 //       })
 //       .catch((err) => {
 //         console.error(err);
@@ -74,14 +76,18 @@
 //       });
 //   };
 
+//   useEffect(() => {
+//     obtenerEventos();
+//   }, []);
+
 //   return (
 //     <div style={{ padding: '20px' }}>
-//       <h2>Mi Google Calendar</h2>
+//       <h2>Mi Calendario Personal</h2>
 
-//       <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+//       <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
 //         <input
 //           type="text"
-//           placeholder="Título"
+//           placeholder="Título del evento"
 //           value={nuevoEvento.summary}
 //           onChange={(e) => setNuevoEvento({ ...nuevoEvento, summary: e.target.value })}
 //           required
@@ -98,7 +104,7 @@
 //           onChange={(e) => setNuevoEvento({ ...nuevoEvento, end: e.target.value })}
 //           required
 //         />
-//         <button type="submit">Añadir Evento</button>
+//         <button type="submit">Crear evento</button>
 //       </form>
 
 //       <Calendar
@@ -106,10 +112,18 @@
 //         events={eventos}
 //         startAccessor="start"
 //         endAccessor="end"
-//         style={{ height: 500 }}
+//         style={{ height: 600 }}
+//         messages={{
+//           next: 'Sig.',
+//           previous: 'Ant.',
+//           today: 'Hoy',
+//           month: 'Mes',
+//           week: 'Semana',
+//           day: 'Día',
+//         }}
 //       />
 //     </div>
 //   );
 // };
 
-// export default GoogleCalendarView;
+// export default GoogleCalendarDashboard;
