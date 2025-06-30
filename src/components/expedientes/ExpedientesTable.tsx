@@ -26,7 +26,7 @@ interface Props {
 
 const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [modalObservacion, setModalObservacion] = useState<string | null>(null);
@@ -334,15 +334,15 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
           }}
           className="page-size-selector"
         >
-          <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={15}>15</option>
+          <option value={20}>20</option>
         </select>
       </div>
 
       {/* Modal Confirmación */}
       <Modal isOpen={!!modalConfirm} onClose={() => setModalConfirm(null)}>
-        <header style={{ backgroundColor: '#062B82', padding: '10px', borderRadius: '4px 4px 0 0' }}>
+        <header style={{ backgroundColor: '#062B82', padding: '10px', borderRadius: '4px 4px 0 0', color: '#fff' }}>
           <h3 style={{ margin: 0 }}>Confirmación</h3>
         </header>
         <p>{modalConfirm?.mensaje}</p>

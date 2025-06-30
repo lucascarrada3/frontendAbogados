@@ -3,6 +3,8 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow-x: hidden; /* evita scroll horizontal */
+  overflow-x: hidden; 
   font-family: 'Poppins', sans-serif;
+  background-color: '#fff'; 
+  
 }

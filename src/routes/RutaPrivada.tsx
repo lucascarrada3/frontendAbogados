@@ -11,7 +11,7 @@ const RutaPrivada = ({ children }: { children: JSX.Element }) => {
   const limiteInactividad = 5 * 60 * 1000; // 5 minutos
 
   if (!token) {
-    return <Navigate to="/" replace state={{ mensaje: 'Necesitás iniciar sesión' }} />;
+    return <Navigate to="/" replace state={{ mensaje: 'Necesitás iniciar sesión para acceder al sistema' }} />;
   }
 
   if (ultimaActividad && ahora - parseInt(ultimaActividad) > limiteInactividad) {

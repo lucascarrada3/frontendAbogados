@@ -106,10 +106,10 @@ const NuevoExpedientePage: React.FC = () => {
       }
 
       //local
-      const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {  
+      // const response = await fetch(`http://localhost:3001/expedientes/${tipo}`, {  
 
         //produccion
-        // const response = await fetch(`${API_URL}/expedientes/${tipo}`, { 
+        const response = await fetch(`${API_URL}/expedientes/${tipo}`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

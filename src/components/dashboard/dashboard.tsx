@@ -5,7 +5,7 @@ import { API_URL } from '../../utils/api';
 import type { Expediente } from '../../Types/expedientes'; // Ajusta ruta
 // import GoogleCalendarLoginButton from '../googleCalendar/GoogleCalendarLoginButton';
 
-const COLORS = ['#062B82', '#228B8D', '#F4A300'];
+const COLORS = ['#228B8D', '#f1c40f', '#e74c3c', '#2ecc71'];
 
 interface EstadoCount {
   [key: string]: number;
@@ -87,7 +87,7 @@ const Dashboard: React.FC = () => {
   return (
         <div className="chart-block">
         <h2>{title}</h2>
-        <PieChart width={400} height={400}>
+        <PieChart width={500} height={500}>
             <Pie
             data={data}
             cx="50%"

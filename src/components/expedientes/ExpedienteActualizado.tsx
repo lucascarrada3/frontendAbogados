@@ -6,7 +6,6 @@ import { API_URL } from '../../utils/api';
 import Modal from '../Modal/Modal';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
-const ESTADO_ACTUALIZADO_ID = 2;
 
 const ActualizarExpediente: React.FC = () => {
   const { id, tipo } = useParams<{ id: string; tipo: string }>();
@@ -14,57 +13,68 @@ const ActualizarExpediente: React.FC = () => {
   const [modalExito, setModalExito] = useState(false);
   const [modalError, setModalError] = useState(false);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) return;
 
-    const fetchExpediente = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) throw new Error('Token no encontrado. Inicia sesión.');
-
-        //local
-        // const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
-
-        //produccion
-        const response = await fetch(`${API_URL}/expedientes/${tipo}/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            localStorage.removeItem('token');
-            navigate('/login');
-            throw new Error('Sesión expirada. Inicia sesión nuevamente.');
-          }
-          throw new Error(`Error al cargar expediente: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        data.idEstado = ESTADO_ACTUALIZADO_ID;
-        setNuevoExpediente(data);
-      } catch (error) {
-        console.error(error);
-        setModalError(true);
+  const fetchExpediente = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token no encontrado. Inicia sesión.');
       }
-    };
 
-    fetchExpediente();
-  }, [id, navigate, tipo]);
+      console.log(`Llamando a /expedientes/${tipo}/${id}`);
+      //local
+     //const response = await fetch(`http://localhost:3001/expedientes/${tipo}/${id}`, {
+     //produccion
+      const response = await fetch(`${API_URL}/expedientes/${tipo}/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNuevoExpediente((prev) =>
-      prev ? { ...prev, [name]: name === 'idEstado' ? parseInt(value) : value } : null
-    );
+      if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login'); // Asumiendo que `navigate` está disponible
+          throw new Error('Sesión expirada. Inicia sesión nuevamente.');
+        }
+        throw new Error(`Error al cargar expediente: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      data.idEstado = 2;
+      console.log("Expediente cargado:", data);
+      setNuevoExpediente(data);
+    } catch (error) {
+      console.error(error);
+      alert('Hubo un error al cargar el expediente');
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  fetchExpediente();
+}, [id, navigate, tipo]);
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setNuevoExpediente((prev) =>
+        prev
+          ? {
+              ...prev,
+              [name]: name === 'idEstado' ? parseInt(value) : value,
+            }
+          : null
+      );
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!nuevoExpediente || !nuevoExpediente.idExpediente) {
       alert('Datos inválidos para actualizar el expediente');
       return;
@@ -72,22 +82,23 @@ const ActualizarExpediente: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('Token no encontrado. Inicia sesión.');
+      if (!token) {
+        throw new Error('Token no encontrado. Inicia sesión.');
+      }
 
-      const payload = {
-        numeroExpediente: nuevoExpediente.numeroExpediente,
-        juzgado: nuevoExpediente.juzgado,
-        caratula: nuevoExpediente.caratula,
-        proveido: nuevoExpediente.proveido,
-        observaciones: nuevoExpediente.observaciones,
-        idEstado: nuevoExpediente.idEstado,
-        idTipo: nuevoExpediente.idTipo,
-        fechaActualizacion: nuevoExpediente.fechaActualizacion,
-      };
+    const payload = {
+      numeroExpediente: nuevoExpediente.numeroExpediente,
+      juzgado: nuevoExpediente.juzgado,
+      caratula: nuevoExpediente.caratula,
+      proveido: nuevoExpediente.proveido,
+      observaciones: nuevoExpediente.observaciones,
+      idEstado: nuevoExpediente.idEstado,
+      idTipo: nuevoExpediente.idTipo,
+      fechaActualizacion: nuevoExpediente.fechaActualizacion,
+    };
 
-
-      //local
-      //http://localhost:3001
+//local
+      // const response = await fetch(`http://localhost:3001/expedientes/${nuevoExpediente.idExpediente}`, {
 
       //produccion
       const response = await fetch(`${API_URL}/expedientes/${nuevoExpediente.idExpediente}`, {
@@ -99,8 +110,11 @@ const ActualizarExpediente: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error('Error al actualizar expediente');
+      if (!response.ok) {
+        throw new Error('Error al actualizar expediente');
+      }
 
+      console.log('Expediente actualizado:', payload);
       setModalExito(true);
       setTimeout(() => {
         navigate('/expedientes');
@@ -108,16 +122,15 @@ const ActualizarExpediente: React.FC = () => {
     } catch (error) {
       console.error(error);
       setModalError(true);
+       setTimeout(() => {
+        navigate('/expedientes');
+      }, 2000);
     }
   };
 
+
   if (!nuevoExpediente) {
-    return (
-      <div className="cargando-expediente">
-        <p>Cargando expediente...</p>
-        <div className="spinner" />
-      </div>
-    );
+    return <div>Cargando...</div>;
   }
 
   return (
@@ -139,7 +152,7 @@ const ActualizarExpediente: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label>Último Movimiento</label>
+            <label>Ultimo Movimiento</label>
             <input
               name="fechaActualizacion"
               type="date"
@@ -159,10 +172,21 @@ const ActualizarExpediente: React.FC = () => {
             <input name="caratula" value={nuevoExpediente.caratula} onChange={handleChange} required />
           </div>
 
+          {/* <div className="input-group">
+            <label>Ultimo Movimiento</label>
+            <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
+          </div> */}
+
           <div className="input-group">
-            <label>Estado</label>
-            <span className="estado-texto">Actualizado</span>
-          </div>
+  <label>Estado</label>
+  <input
+    name="idEstado"
+    value="Actualizado"
+    readOnly
+    disabled
+  />
+</div>
+
         </div>
 
         <div className="input-group full-width">
@@ -180,20 +204,18 @@ const ActualizarExpediente: React.FC = () => {
           <button type="submit">Actualizar Expediente</button>
         </div>
       </form>
-
-      <Modal isOpen={modalExito} onClose={() => navigate('/expedientes')}>
+      <Modal isOpen={modalExito} onClose={() => setModalExito(false)}>
         <div style={{ textAlign: 'center', padding: '1rem' }}>
           <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
           <h3>Expediente actualizado correctamente</h3>
           <p>Serás redirigido en un momento...</p>
         </div>
       </Modal>
-
-      <Modal isOpen={modalError} onClose={() => setModalError(false)}>
+       <Modal isOpen={modalError} onClose={() => setModalError(false)}>
         <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <FaExclamationCircle size={48} color="red" style={{ marginBottom: '1rem' }} />
+          <FaExclamationCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
           <h3>Error al actualizar el expediente</h3>
-          <p>Por favor, intentá nuevamente.</p>
+          <p>Serás redirigido en un momento...</p>
         </div>
       </Modal>
     </div>

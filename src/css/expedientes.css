@@ -1,6 +1,6 @@
 .expedientes-page {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f6f9;
+    background: linear-gradient(to bottom right, #ffffff, #062B82);
     min-height: 100vh;
     padding-bottom: 2rem;
   }
@@ -8,7 +8,7 @@
   .titulo-expediente {
     text-align: center;
     margin-top: 30px;
-    color: #062B82;
+    color: #000000;
   }
   
   .tabs-container {
@@ -38,8 +38,8 @@
   .tabla-container {
     margin: 0 auto;
     width: 90%;
-    max-width: 1200px;
-    background-color: white;
+    max-width: 1600px;
+    background-color: #d1d1d1;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     padding: 20px;

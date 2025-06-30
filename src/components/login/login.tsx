@@ -4,6 +4,8 @@ import logo from '../../assets/logoclarito.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../utils/api';
 import { Eye, EyeOff } from 'lucide-react';
+import ModalLoading from '../Modal/ModalLoading';
+import ModalMensaje from '../Modal/ModalMensaje';
 
 const MAX_INTENTOS = 3;
 const BLOQUEO_MS = 30 * 1000; // 30 segundos
@@ -70,13 +72,15 @@ const Login: React.FC = () => {
   };
 
   return (
+    <>
+    {loading && <ModalLoading />}
     <div className="container">
       <div className="left-section">
         <img src={logo} alt="Estudio Romano" className="logo" />
       </div>
       <div className="right-section">
         <div className="form-container2">
-          {mensaje && <div className="error-message">{mensaje}</div>}
+          
 
           <form onSubmit={handleLogin}>
             <div className="input-group">
@@ -122,6 +126,7 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
+            {mensaje && <ModalMensaje mensaje={mensaje} onClose={() => setMensaje('')} />}
 
             <div className="actions">
               <button type="submit" disabled={loading || bloqueado}>
@@ -132,7 +137,9 @@ const Login: React.FC = () => {
           </form>
         </div>
       </div>
+      
     </div>
+    </>
   );
 };
 
