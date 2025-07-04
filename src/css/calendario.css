@@ -1,0 +1,13 @@
+.calendario-container {
+  padding-top: 80px; /* Para que no lo tape la navbar fija */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.calendar-wrapper {
+  height: calc(100vh - 100px); /* Altura total menos navbar y algo más */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}

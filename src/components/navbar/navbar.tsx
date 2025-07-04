@@ -3,9 +3,8 @@ import '../../css/navbar.css';
 import logo from '../../assets/logonavbar.jpg';
 import usuario from '../../assets/usuario.png';
 import menu from '../../assets/menu.jpg';
-// import { FaCalendarAlt } from 'react-icons/fa';
 
-import { FaTachometerAlt, FaFolderOpen } from 'react-icons/fa';
+import { FaTachometerAlt, FaFolderOpen, FaCalendarAlt } from 'react-icons/fa';
 
 interface NavbarProps {
   username: string;
@@ -133,13 +132,13 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
               <span className="dropdown-title">Expedientes</span>
             )}
           </li>
-          {/* <li
-            className={activeItem === 'googleCalendar' ? 'active' : ''}
-            onClick={() => handleSidebarItemClick('googleCalendar', '/oauth2callback')}
+          <li
+            className={activeItem === 'calendario' ? 'active' : ''}
+            onClick={() => handleSidebarItemClick('calendario', '/calendario')}
           >
             <FaCalendarAlt className="sidebar-icon" />
-            {isSidebarOpen && <span className="dropdown-title">Google Calendar</span>}
-          </li> */}
+            {isSidebarOpen && <span className="dropdown-title">Calendario</span>}
+          </li>
         </ul>
       </div>
 
