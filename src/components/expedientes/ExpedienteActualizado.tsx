@@ -177,15 +177,18 @@ const ActualizarExpediente: React.FC = () => {
             <input name="proveido" value={nuevoExpediente.proveido} onChange={handleChange} required />
           </div> */}
 
-          <div className="input-group">
-  <label>Estado</label>
-  <input
-    name="idEstado"
-    value="Actualizado"
-    readOnly
-    disabled
-  />
-</div>
+            <div className="input-group">
+            <label>Estado</label>
+            <select
+              name="idEstado"
+              value={nuevoExpediente.idEstado}
+              onChange={handleChange}
+              required
+            >
+              <option value={1}>Pendiente</option>
+              <option value={2}>Actualizado</option>
+            </select>
+            </div>
 
         </div>
 
