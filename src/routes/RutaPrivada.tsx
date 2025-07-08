@@ -17,7 +17,15 @@ const RutaPrivada = ({ children }: { children: JSX.Element }) => {
   if (ultimaActividad && ahora - parseInt(ultimaActividad) > limiteInactividad) {
     localStorage.removeItem("token");
     localStorage.removeItem("ultimaActividad");
-    return <Navigate to="/" replace state={{ mensaje: 'Sesión expirada por inactividad' }} />;
+    setTimeout(() => {
+      window.location.replace("/?mensaje=Sesión%20expirada%20por%20inactividad");
+    }, 3000);
+    return (
+      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <h2>Sesión expirada por inactividad</h2>
+        <p>Serás redirigido al inicio en 3 segundos...</p>
+      </div>
+    );
   }
 
   return children;
