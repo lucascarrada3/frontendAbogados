@@ -126,7 +126,11 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
-            {mensaje && <ModalMensaje message={mensaje} onClose={() => setMensaje('')} />}
+            {mensaje && (
+              <ModalMensaje isOpen={true} onClose={() => setMensaje('')}>
+                <p>{mensaje}</p>
+              </ModalMensaje>
+            )}
 
             <div className="actions">
               <button type="submit" disabled={loading || bloqueado}>
