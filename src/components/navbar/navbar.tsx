@@ -5,6 +5,7 @@ import usuario from '../../assets/usuario.png';
 import menu from '../../assets/menu.jpg';
 
 import { FaTachometerAlt, FaFolderOpen, FaCalendarAlt } from 'react-icons/fa';
+// import { API_URL } from '../../utils/api';
 
 interface NavbarProps {
   username: string;
@@ -39,6 +40,8 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
       setIsSidebarInteractive(false);
     }
   };
+
+  // Eliminar la lógica relacionada con fotoPerfil ya que no se usará
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -98,10 +101,22 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
           <button className="user-button" onClick={handleUserButtonClick}>
             <img src={usuario} alt="Usuario" className="usuario-logo" />
           </button>
-          <div className={`user-dropdown ${isUserDropdownOpen ? 'open' : ''}`}>
-            <p><strong>Usuario: </strong> {username}</p>
-            <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
+         <div className={`user-dropdown ${isUserDropdownOpen ? 'open' : ''}`}>
+          <p><strong>Usuario: </strong> {username}</p>
+          <div className="user-dropdown-buttons">
+            <button className="perfil-button"
+              onClick={() => {
+                setIsUserDropdownOpen(false);
+                window.location.href = '/mi-perfil';
+              }}
+            >
+              Mi Perfil
+            </button>
+            <button className="logout-button" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
           </div>
+        </div>
           <button className="menu-button" onClick={handleMenuButtonClick}>
             <img src={menu} alt="Menú" className="menu-logo" />
           </button>

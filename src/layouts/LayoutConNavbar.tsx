@@ -32,12 +32,12 @@ const LayoutConNavbar: React.FC = () => {
       }
     };
 
-    actualizarActividad(); // Set inicial
+    actualizarActividad();
 
     const eventos = ['mousemove', 'keydown', 'click', 'scroll'];
     eventos.forEach((evento) => window.addEventListener(evento, actualizarActividad));
 
-    const intervalo = setInterval(verificarInactividad, 30000); // cada 30 segundos
+    const intervalo = setInterval(verificarInactividad, 30000);
 
     return () => {
       eventos.forEach((evento) => window.removeEventListener(evento, actualizarActividad));
@@ -48,7 +48,9 @@ const LayoutConNavbar: React.FC = () => {
   return (
     <>
       <Navbar username={username} />
-      <Outlet />
+      <div style={{ paddingTop: '70px' }}>
+        <Outlet />
+      </div>
     </>
   );
 };

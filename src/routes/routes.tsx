@@ -9,6 +9,7 @@ import ActualizarExpediente from '../components/expedientes/ExpedienteActualizad
 import LayoutConNavbar from '../layouts/LayoutConNavbar';
 import RutaPrivada from './RutaPrivada';
 import { Calendario } from '../components/googleCalendar/Calendario';
+import PerfilUsuario from '../components/Perfil/PerfilUsuario';
 // import GoogleCalendarAuth from '../components/googleCalendar/GoogleCalendarAuth';
 // import GoogleCalendarDashboard from '../components/googleCalendar/GoogleCalendarDashboard';
 // import GoogleCalendarView from '../components/googleCalendar/GoogleCalendarView';
@@ -29,9 +30,12 @@ const AppRoutes = () => (
             </RutaPrivada>
           }
         >
+          
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/mi-perfil" element={<PerfilUsuario />} />
         <Route path="/expedientes" element={<TabsExpedientesPage />} />
         <Route path="/calendario" element={<Calendario />} />
+        
         <Route path="/expedientes/nuevoexpediente" element={<NuevoExpedientePage />} />
         <Route path="/expedientes/:tipo/:id" element={<ActualizarExpediente />} />
         {/* <Route path="/oauth2callback" element={<GoogleCalendarAuth />} />

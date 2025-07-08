@@ -76,6 +76,20 @@
     font-size: 14px;
 }
 
+.user-dropdown-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: space-between;
+}
+
+.user-dropdown-buttons button {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+
 .logout-button {
     background-color: #062B82;
     color: white;

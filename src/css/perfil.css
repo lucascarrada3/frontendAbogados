@@ -1,0 +1,73 @@
+.perfil-container {
+  max-width: 700px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #062b82;
+  text-align: center;
+}
+
+.perfil-form,
+.perfil-password {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+label {
+  font-weight: 500;
+  color: #333;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #062b82;
+  outline: none;
+}
+
+button {
+  padding: 10px;
+  background: #062b82;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* 
+button:hover {
+  background-color: #041c5c;
+} */
+
+.perfil-password {
+  background: #f4f6fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 40px;
+}
+
+.perfil-password h3 {
+  color: #062b82;
+  margin-bottom: 12px;
+}
