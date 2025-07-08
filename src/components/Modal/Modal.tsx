@@ -1,6 +1,6 @@
-// src/components/Modal.tsx
 import React from 'react';
-import '../../css/modal.css'; // Creamos el estilo abajo
+import { AlertCircle } from 'lucide-react';
+import '../../css/modal.css';
 
 interface ModalProps {
   isOpen: boolean;
@@ -13,9 +13,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content error-modal">
         <button className="modal-close" onClick={onClose}>×</button>
-        {children}
+        <div className="modal-icon">
+          <AlertCircle size={40} color="#e74c3c" />
+        </div>
+        <div className="modal-message">
+          {children}
+        </div>
       </div>
     </div>
   );

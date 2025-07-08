@@ -1,17 +1,25 @@
+// src/components/Modal/ModalMensaje.tsx
 import React from 'react';
-import '../../css/modalMensaje.css';
+import { CheckCircle } from 'lucide-react';
+import '../../css/modal.css';
 
 interface ModalMensajeProps {
-  mensaje: string;
+  isOpen: boolean;
   onClose: () => void;
+  children: React.ReactNode;
 }
 
-const ModalMensaje: React.FC<ModalMensajeProps> = ({ mensaje, onClose }) => {
+const ModalMensaje: React.FC<ModalMensajeProps> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
   return (
-    <div className="modal-mensaje-backdrop" onClick={onClose}>
-      <div className="modal-mensaje" onClick={(e) => e.stopPropagation()}>
-        <p>{mensaje}</p>
-        <button onClick={onClose}>Cerrar</button>
+    <div className="modal-overlay">
+      <div className="modal-content success-modal">
+        <button className="modal-close" onClick={onClose}>×</button>
+        <div className="modal-icon">
+          <CheckCircle size={40} color="#2ecc71" />
+        </div>
+        <div className="modal-message">{children}</div>
       </div>
     </div>
   );

@@ -1,36 +1,67 @@
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
   background: white;
-  padding: 2rem;
-  max-width: 600px;
-  width: 90%; /* se adapta mejor en pantallas más chicas */
-  max-height: 80vh;
-  overflow-y: auto;
+  padding: 1.5rem;
   border-radius: 10px;
   position: relative;
-  word-wrap: break-word;         /* 🔁 fuerza quiebre de palabras */
-  white-space: pre-wrap;         /* 🔁 respeta saltos de línea y permite ajuste */
-  overflow-wrap: break-word;     /* 🔁 similar, para compatibilidad */
+  min-width: 300px;
+  max-width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.2s ease-in-out;
 }
+
+.success-modal {
+  border: 2px solid #2ecc71;
+}
+
+.success-modal .modal-icon svg {
+  color: #2ecc71;
+}
+
 
 .modal-close {
   position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  font-size: 1.5rem;
+  top: 8px;
+  right: 12px;
   background: none;
   border: none;
+  font-size: 20px;
   cursor: pointer;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Estilo específico para errores */
+.error-modal {
+  border-left: 6px solid #e74c3c;
+}
+
+.modal-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.modal-message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #333;
 }
