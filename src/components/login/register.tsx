@@ -71,11 +71,11 @@ const handleRegister = async (e: React.FormEvent) => {
           <p>{errorModal}</p>
         </Modal>
       )}
-      {successModal && (
+        {successModal && (
         <ModalMensaje isOpen={true} onClose={() => setSuccessModal(false)}>
-          <p>¡Registro exitoso!</p>
+            <p>¡Registro exitoso!</p>
         </ModalMensaje>
-      )}
+        )}
 
       <div className="left-section">
         <img src={logo} alt="Estudio Romano" className="logo" />
