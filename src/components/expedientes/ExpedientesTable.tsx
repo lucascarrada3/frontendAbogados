@@ -38,7 +38,7 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
   } | null>(null);
   
   // Estado para modal mensajes exito/error
-  const [modalMensaje, setModalMensaje] = useState<{
+  const [, setModalMensaje] = useState<{
     tipo: 'error' | 'exito';
     texto: string;
   } | null>(null);
