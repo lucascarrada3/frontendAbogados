@@ -65,3 +65,15 @@
   font-size: 1.1rem;
   color: #333;
 }
+
+.modal-content.modal-success {
+  border: 2px solid #2ecc71;
+}
+
+.modal-content.modal-error {
+  border: 2px solid #e74c3c;
+}
+
+.modal-content.modal-info {
+  border: 2px solid #3498db;
+}

@@ -40,7 +40,7 @@ const Login: React.FC = () => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         body: JSON.stringify({ nombreUsuario, password }),
       });
 
@@ -48,6 +48,7 @@ const Login: React.FC = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.usuario.nombre);
+        localStorage.setItem('ultimaActividad', Date.now().toString());
         navigate('/dashboard');
       } else {
         setIntentosFallidos(prev => prev + 1);
@@ -137,6 +138,7 @@ const Login: React.FC = () => {
                 {loading ? 'Ingresando...' : 'Iniciar Sesión'}
               </button>
               <a href="/register">Registrarse</a>
+              <a href="/solicitar-recuperacion">¿Olvidaste tu contraseña?</a>
             </div>
           </form>
         </div>

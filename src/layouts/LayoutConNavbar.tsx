@@ -17,7 +17,7 @@ const LayoutConNavbar: React.FC = () => {
     };
 
     const verificarInactividad = () => {
-      const limiteInactividad = 20 * 60 * 1000;
+      const limiteInactividad = 5 * 60 * 1000; // ✅ Igual que en RutaPrivada
       const ultimaActividad = localStorage.getItem('ultimaActividad');
       const ahora = Date.now();
 
@@ -35,12 +35,16 @@ const LayoutConNavbar: React.FC = () => {
     actualizarActividad();
 
     const eventos = ['mousemove', 'keydown', 'click', 'scroll'];
-    eventos.forEach((evento) => window.addEventListener(evento, actualizarActividad));
+    eventos.forEach((evento) =>
+      window.addEventListener(evento, actualizarActividad)
+    );
 
-    const intervalo = setInterval(verificarInactividad, 30000);
+    const intervalo = setInterval(verificarInactividad, 10000); // cada 10s está bien
 
     return () => {
-      eventos.forEach((evento) => window.removeEventListener(evento, actualizarActividad));
+      eventos.forEach((evento) =>
+        window.removeEventListener(evento, actualizarActividad)
+      );
       clearInterval(intervalo);
     };
   }, [navigate]);

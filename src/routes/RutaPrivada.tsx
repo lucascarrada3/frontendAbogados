@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 const RutaPrivada = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem("token");
   const ultimaActividad = localStorage.getItem("ultimaActividad");
-//   const location = useLocation();
+  //   const location = useLocation();
 
   const ahora = Date.now();
   const limiteInactividad = 5 * 60 * 1000; // 5 minutos

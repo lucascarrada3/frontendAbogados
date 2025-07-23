@@ -10,6 +10,8 @@ import LayoutConNavbar from '../layouts/LayoutConNavbar';
 import RutaPrivada from './RutaPrivada';
 import { Calendario } from '../components/googleCalendar/Calendario';
 import PerfilUsuario from '../components/Perfil/PerfilUsuario';
+import ResetPassword from '../components/login/ResetPassword';
+import SolicitarRecuperacion from '../components/login/SolicitarRecuperacion';
 // import GoogleCalendarAuth from '../components/googleCalendar/GoogleCalendarAuth';
 // import GoogleCalendarDashboard from '../components/googleCalendar/GoogleCalendarDashboard';
 // import GoogleCalendarView from '../components/googleCalendar/GoogleCalendarView';
@@ -21,6 +23,8 @@ const AppRoutes = () => (
       {/* Rutas públicas */}
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/solicitar-recuperacion" element={<SolicitarRecuperacion />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Rutas que incluyen el navbar */}
       <Route

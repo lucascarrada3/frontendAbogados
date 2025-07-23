@@ -4,7 +4,6 @@ import { Expediente } from '../../Types/expedientes';
 import '../../css/nuevoExpediente.css';
 import { API_URL } from '../../utils/api';
 import Modal from '../Modal/Modal';
-import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 
 const ActualizarExpediente: React.FC = () => {
@@ -207,20 +206,15 @@ const ActualizarExpediente: React.FC = () => {
           <button type="submit">Actualizar Expediente</button>
         </div>
       </form>
-      <Modal isOpen={modalExito} onClose={() => setModalExito(false)}>
-        <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
-          <h3>Expediente actualizado correctamente</h3>
-          <p>Serás redirigido en un momento...</p>
-        </div>
+      <Modal isOpen={modalExito} onClose={() => setModalExito(false)} tipo="success" autoClose={3000}>
+        <h3>Expediente actualizado correctamente</h3>
+        <p>Serás redirigido pronto.</p>
       </Modal>
-       <Modal isOpen={modalError} onClose={() => setModalError(false)}>
-        <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <FaExclamationCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
-          <h3>Error al actualizar el expediente</h3>
-          <p>Serás redirigido en un momento...</p>
-        </div>
+      <Modal isOpen={modalError} onClose={() => setModalError(false)} tipo="error" autoClose={3000}>
+        <h3>Error al actualizar expediente</h3>
+        <p>Intenta nuevamente.</p>
       </Modal>
+
     </div>
   );
 };

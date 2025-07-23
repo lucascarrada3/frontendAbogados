@@ -10,7 +10,7 @@ import {
   SortingState,
 } from '@tanstack/react-table';
 import { Expediente } from '../../Types/expedientes';
-import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp, FaExclamationCircle } from 'react-icons/fa';
+import { FaClock, FaSpinner, FaCheckCircle, FaArrowCircleUp } from 'react-icons/fa';
 import { FaTrash } from 'react-icons/fa';
 import '../../css/expedientesTable.css';
 import { useNavigate } from 'react-router-dom';
@@ -340,8 +340,12 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
         </select>
       </div>
 
-      {/* Modal Confirmación */}
-      <Modal isOpen={!!modalConfirm} onClose={() => setModalConfirm(null)}>
+{/* Modal Confirmación SIN icono */}
+      <Modal
+        isOpen={!!modalConfirm}
+        onClose={() => setModalConfirm(null)}
+        showIcon={false} // Oculta el icono
+      >
         <header style={{ backgroundColor: '#062B82', padding: '10px', borderRadius: '4px 4px 0 0', color: '#fff' }}>
           <h3 style={{ margin: 0 }}>Confirmación</h3>
         </header>
@@ -378,34 +382,13 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
         </div>
       </Modal>
 
-      {/* Modal Mensaje Exito/Error */}
-      <Modal isOpen={!!modalMensaje} onClose={() => setModalMensaje(null)}>
-        <div style={{ textAlign: 'center', padding: '1rem' }}>
-          {modalMensaje?.tipo === 'exito' ? (
-            <FaCheckCircle size={48} color="green" style={{ marginBottom: '1rem' }} />
-          ) : (
-            <FaExclamationCircle size={48} color="red" style={{ marginBottom: '1rem' }} />
-          )}
-          <h3>{modalMensaje?.texto}</h3>
-          <button
-            onClick={() => setModalMensaje(null)}
-            style={{
-              marginTop: '1rem',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            Cerrar
-          </button>
-        </div>
-      </Modal>
 
-      {/* Modal Observacion texto largo */}
-      <Modal isOpen={!!modalObservacion} onClose={() => setModalObservacion(null)}>
+            {/* Modal Mensaje Exito/Error CON icono */}
+          <Modal
+        isOpen={!!modalObservacion}
+        onClose={() => setModalObservacion(null)}
+        showIcon={false}
+      >
         <div style={{ padding: '1rem' }}>
           <h3>Observaciones</h3>
           <p>{modalObservacion}</p>
@@ -425,6 +408,40 @@ const ExpedientesTable: React.FC<Props> = ({ data, onFinalizar, isLoading }) => 
           </button>
         </div>
       </Modal>
+
+
+      {/* Modal Observación SIN icono */}
+     <Modal isOpen={!!modalObservacion} onClose={() => setModalObservacion(null)}>
+  <div style={{ padding: '1rem' }}>
+    <h3>Observaciones</h3>
+    <p
+      style={{
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word',
+        maxWidth: '100%',
+      }}
+    >
+      {modalObservacion}
+    </p>
+    <button
+      onClick={() => setModalObservacion(null)}
+      style={{
+        marginTop: '1rem',
+        backgroundColor: '#007bff',
+        color: '#fff',
+        padding: '8px 16px',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+      }}
+    >
+      Cerrar
+    </button>
+  </div>
+</Modal>
+
+
 
     </div>
   );
