@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../utils/api"; // o donde tengas tu API_URL
-import "../../css/SolicitarRecuperacion.css"; // Asegúrate de tener estilos adecuados
+import "../../css/solicitarRecuperacion.css"; // Asegúrate de tener estilos adecuados
 import logo from '../../assets/logoclarito.jpg';
 
 const SolicitarRecuperacion: React.FC = () => {
